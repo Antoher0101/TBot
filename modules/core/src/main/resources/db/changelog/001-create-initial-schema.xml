@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="mawus">
+        <createTable tableName="bot_user">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="role_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="bot_role">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="bot_city">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="bot_transport">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="bot_trip">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transport_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transport_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_from_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_to_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departure_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="arrival_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="bot_trip"
+                                 baseColumnNames="transport_id"
+                                 constraintName="fk_trip_transport"
+                                 referencedTableName="bot_transport"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="bot_trip"
+                                 baseColumnNames="city_from_id"
+                                 constraintName="fk_trip_city_from"
+                                 referencedTableName="bot_city"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="bot_trip"
+                                 baseColumnNames="city_to_id"
+                                 constraintName="fk_trip_city_to"
+                                 referencedTableName="bot_city"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="bot_user"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_role"
+                                 referencedTableName="bot_role"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>

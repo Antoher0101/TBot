@@ -1,0 +1,11 @@
+rootProject.name = 'tbot'
+
+include 'modules:core'
+include 'modules:api'
+
+rootProject.children.each { p1 ->
+    p1.buildFileName = "${p1.name}.gradle"
+    p1.children.each { p2 ->
+        p2.buildFileName = "${p2.name}.gradle"
+    }
+}

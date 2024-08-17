@@ -1,0 +1,18 @@
+dependencies {
+    compileOnly project(':modules:core')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = true
+}
+
+bootBuildImage{
+    imageName='mawus/'+rootProject.name+'-'+project.name
+}
