@@ -3,11 +3,26 @@ services:
     image: 'postgres:14'
     container_name: tbot_db
     environment:
-      - 'POSTGRES_DB=tbot_test'
-      - 'POSTGRES_PASSWORD=mawus'
-      - 'POSTGRES_USER=mawus'
+      POSTGRES_DB: "tbot_test"
+      POSTGRES_USER: "mawus"
+      POSTGRES_PASSWORD: "mawus"
     ports:
       - '5432'
+    networks:
+      - tbot
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mawus -d tbot_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  core:
+    build: ./modules/core
+    container_name: core-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      "tbot_db":
+        condition: service_healthy
     networks:
       - tbot
   api:
@@ -15,35 +30,21 @@ services:
     container_name: api-service
     ports:
       - "8080:8080"
-    networks:
-      - tbot
-  core:
-    build: ./modules/core
-    container_name: core-service
-    ports:
-      - "8081:8081"
     depends_on:
+      - core
       - tbot_db
     networks:
       - tbot
-#  kafka:
-#    image: confluentinc/cp-kafka:7.2.1
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_LISTENERS: PLAINTEXT://localhost:9092
-#    ports:
-#      - "9092:9092"
-#    networks:
-#      - tbot
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:7.2.1
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#    ports:
-#      - "2181:2181"
-#    networks:
-#      - tbot
+  bot:
+    build: ./modules/bot
+    container_name: bot-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - core
+      - tbot_db
+    networks:
+      - tbot
 networks:
   tbot:
     driver: bridge

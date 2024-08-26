@@ -1,5 +1,18 @@
 dependencies {
-    implementation project(':modules:core')
+    compileOnly project(':modules:core')
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = true
+}
+
+bootBuildImage{
+    imageName='mawus/'+rootProject.name+'-'+project.name
 }
