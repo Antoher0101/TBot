@@ -6,14 +6,14 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight([CoreApplication]){F,green} %highlight(%-5level) %logger.%M\(%line\) - %msg%n
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight([ApiApplication]){F,green} %highlight(%-5level) %logger.%M\(%line\) - %msg%n
             </pattern>
         </encoder>
     </appender>
 
     <appender name="FILE_APPENDER"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/core.log</file>
+        <file>${LOG_PATH}/api.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
@@ -23,7 +23,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <maxFileSize>100MB</maxFileSize>
             <fileNamePattern>
-                ${LOG_PATH}/archived/core.%d{yyyy-MM-dd}.%i.log
+                ${LOG_PATH}/archived/api.%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
