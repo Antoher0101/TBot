@@ -36,7 +36,7 @@ subprojects {
     }
 
     task bootRunAll {
-        dependsOn ':modules:core:bootRun', ':modules:api:bootRun'
+        dependsOn ':modules:core:bootRun', ':modules:api:bootRun', ':modules:bot:bootRun'
     }
 
     task buildAll(type: GradleBuild) {
