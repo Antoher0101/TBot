@@ -2,7 +2,6 @@ dependencies {
     compileOnly project(':modules:core')
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
-    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
