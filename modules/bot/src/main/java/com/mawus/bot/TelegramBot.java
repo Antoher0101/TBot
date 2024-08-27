@@ -4,7 +4,6 @@ import com.mawus.bot.config.BotConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -22,11 +21,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final String botToken;
 
-    public TelegramBot(BotConfig config) {
-        super(new DefaultBotOptions(), config.getBotToken());
+    public TelegramBot(TelegramBotsApi telegramBotsApi, BotConfig config) throws TelegramApiException {
         this.botUsername = config.getBotUsername();
         this.botToken = config.getBotToken();
         this.reconnectPause = config.getReconnectPause();
+
+        telegramBotsApi.registerBot(this);
     }
 
     @Override
