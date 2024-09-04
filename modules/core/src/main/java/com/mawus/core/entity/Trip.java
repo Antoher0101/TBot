@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "bot$Trip")
 @Table(name = "bot_trip")
 public class Trip extends BaseUuidEntity {
     @Column(nullable = false)

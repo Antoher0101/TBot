@@ -2,7 +2,7 @@ package com.mawus.core.entity;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "bot$User")
 @Table(name = "bot_user")
 public class User extends BaseUuidEntity {
 

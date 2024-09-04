@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "bot$City")
 @Table(name = "bot_city")
 public class City extends BaseUuidEntity {
 

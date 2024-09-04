@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "bot$Purpose")
 @Table(name = "bot_purpose")
 public class Purpose extends BaseUuidEntity {
 
