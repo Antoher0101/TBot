@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly project(':modules:core')
+    implementation project(':modules:core')
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -1,5 +1,6 @@
 package com.mawus.core.entity;
 
+import com.mawus.core.domain.MessagePlaceholder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -16,6 +17,23 @@ public class Message extends BaseUuidEntity {
 
     @Column(length = 4096, nullable = false)
     private String text;
+
+    public void applyPlaceholder(MessagePlaceholder placeholder) {
+        text = text.replace(placeholder.getPlaceholder(), placeholder.getReplacement().toString());
+    }
+
+    public void removeTextBetweenPlaceholder(String placeholderName) {
+        text = text.replaceAll(placeholderName + "(?s).*" + placeholderName, "");
+    }
+
+    public String buildText() {
+        removeAllPlaceholders();
+        return text;
+    }
+
+    public void removeAllPlaceholders() {
+        text = text.replaceAll("%.*%", "");
+    }
 
     public String getName() {
         return name;

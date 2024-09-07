@@ -1,6 +1,10 @@
 package com.mawus.bot;
 
 import com.mawus.bot.config.BotConfig;
+import com.mawus.bot.exceptions.HandlerNotFoundException;
+import com.mawus.bot.handlers.ActionHandler;
+import com.mawus.bot.handlers.Command;
+import com.mawus.bot.handlers.UpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,7 +15,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-@Service
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Service("bot_telegramBotService")
 public class TelegramBot extends TelegramLongPollingBot {
     private final Logger log = LoggerFactory.getLogger(TelegramBot.class);
 
@@ -21,18 +30,20 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final String botToken;
 
-    public TelegramBot(TelegramBotsApi telegramBotsApi, BotConfig config) throws TelegramApiException {
+    protected Map<Command, UpdateHandler> updateHandlers;
+    protected Map<Command, ActionHandler> actionHandlers;
+
+    public TelegramBot(BotConfig config) throws TelegramApiException {
         this.botUsername = config.getBotUsername();
         this.botToken = config.getBotToken();
         this.reconnectPause = config.getReconnectPause();
-
-        telegramBotsApi.registerBot(this);
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            log.info(update.toString());
+            log.debug(update.toString());
+            handle(update);
         } catch (Exception e) {
             log.error("Failed to handle update", e);
         }
@@ -65,5 +76,49 @@ public class TelegramBot extends TelegramLongPollingBot {
             connect();
         }
         return session;
+    }
+
+    private void handle(Update update) throws TelegramApiException {
+        if (handleCommand(update)) {
+            log.debug("The command {} was performed", update.getMessage().getText());
+            return;
+        }
+        if (handleAction(update)) {
+            log.debug("The action {} was performed", update.getMessage().getText());
+        }
+    }
+
+    private boolean handleCommand(Update update) throws TelegramApiException {
+        List<UpdateHandler> handlers = updateHandlers.values().stream().filter(
+                command -> command.canHandleUpdate(update)
+        ).toList();
+
+        if (handlers.size() > 1) {
+            throw new HandlerNotFoundException("Found more than one command handler: " + handlers.size());
+        }
+        if (handlers.size() != 1) {
+            return false;
+        }
+
+        handlers.get(0).handleUpdate(this, update);
+        return true;
+    }
+
+    private boolean handleAction(Update update) throws TelegramApiException {
+        if (!update.hasMessage()) {
+            return false;
+        }
+
+        // todo action
+        return true;
+    }
+
+    public void setHandlers(List<UpdateHandler> updateHandlers, List<ActionHandler> actionHandlers) {
+        if (updateHandlers != null) {
+            this.updateHandlers = updateHandlers.stream().collect(Collectors.toMap(UpdateHandler::getCommand, Function.identity()));
+        }
+        if (actionHandlers != null) {
+            this.actionHandlers = actionHandlers.stream().collect(Collectors.toMap(ActionHandler::getCommand, Function.identity()));
+        }
     }
 }

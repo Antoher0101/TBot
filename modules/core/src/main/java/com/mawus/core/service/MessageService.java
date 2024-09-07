@@ -1,7 +1,8 @@
 package com.mawus.core.service;
 
-import org.springframework.stereotype.Service;
+import com.mawus.core.entity.Message;
 
-@Service
-public class MessageService {
+public interface MessageService {
+
+    Message findByName(String messageName);
 }

@@ -1,0 +1,32 @@
+package com.mawus.bot.model;
+
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+
+import java.util.Arrays;
+
+public enum Button {
+    START("/start");
+
+    private final String alias;
+
+    Button(String alias) {
+        this.alias = alias;
+    }
+
+    public static ReplyKeyboardMarkup createGeneralMenuKeyboard() {
+        ReplyKeyboardMarkup.ReplyKeyboardMarkupBuilder keyboardBuilder = ReplyKeyboardMarkup.builder();
+        keyboardBuilder.resizeKeyboard(true);
+        keyboardBuilder.selective(true);
+        keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
+                KeyboardButton.builder().text(START.getAlias()).build() // todo example
+        )));
+
+        return keyboardBuilder.build();
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+}

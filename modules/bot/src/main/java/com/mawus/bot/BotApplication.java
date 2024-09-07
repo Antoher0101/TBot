@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.mawus.bot", "com.mawus.core"})
 @PropertySource("classpath:application-bot.properties")
 public class BotApplication implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(BotApplication.class);
