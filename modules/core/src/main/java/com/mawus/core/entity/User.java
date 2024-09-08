@@ -9,9 +9,9 @@ public class User extends BaseUuidEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
 
     public String getUsername() {
         return username;
@@ -21,11 +21,11 @@ public class User extends BaseUuidEntity {
         this.username = username;
     }
 
-    public Role getRole() {
-        return role;
+    public Client getClient() {
+        return client;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

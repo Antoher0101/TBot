@@ -7,5 +7,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="db/changelog/001-create-initial-schema.xml"/>
+    <include file="db/changelog/002-add-user-client-relation.xml"/>
+    <include file="db/changelog/003-add-start-message-button.xml"/>
 
 </databaseChangeLog>

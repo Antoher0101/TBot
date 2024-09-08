@@ -1,7 +1,10 @@
 package com.mawus.core.service;
 
-import org.springframework.stereotype.Service;
+import com.mawus.core.entity.User;
 
-@Service
-public class UserService {
+public interface UserService {
+
+    User findByChatId(Long chatId);
+
+    User saveUser(User user);
 }

@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1-add-start-message-button" author="mawus">
+        <insert tableName="bot_message">
+            <column name="id" value="ad693ca4-5886-43ec-a789-4696694a7748"/>
+            <column name="name" value="START_MESSAGE"/>
+            <column name="description" value="Start message response"/>
+            <column name="text" value="Чтобы начать пользоваться ботом, нужна дополнительная информация. Нажмите кнопку 'Зарегистрироваться'"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

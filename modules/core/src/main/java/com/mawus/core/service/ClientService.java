@@ -15,8 +15,8 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public Optional<Client> findByChatId(Long chatId) {
-        return clientRepository.findByChatId(chatId);
+    public Client findByChatId(Long chatId) {
+        return clientRepository.findByChatId(chatId).orElse(null);
     }
 
     public void saveClient(Client client) {

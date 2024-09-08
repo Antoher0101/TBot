@@ -1,8 +1,6 @@
 package com.mawus.core.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity(name = "bot$Client")
 @Table(name = "bot_client")
@@ -19,6 +17,9 @@ public class Client extends BaseUuidEntity {
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
+
+    @OneToOne(mappedBy = "client")
+    private User user;
 
     public Long getChatId() {
         return chatId;
@@ -50,5 +51,13 @@ public class Client extends BaseUuidEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

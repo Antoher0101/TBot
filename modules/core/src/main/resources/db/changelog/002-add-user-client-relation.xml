@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1-add-client-id-column-to-user" author="mawus">
+        <addColumn tableName="bot_user">
+            <column name="client_id" type="uuid"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2-add-foreign-key-user-client" author="mawus">
+        <addForeignKeyConstraint
+                baseTableName="bot_user"
+                baseColumnNames="client_id"
+                referencedTableName="bot_client"
+                referencedColumnNames="id"
+                constraintName="fk_user_client"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="3-add-unique-constraint-client-id" author="mawus">
+        <addUniqueConstraint
+                columnNames="client_id"
+                tableName="bot_user"
+                constraintName="bot_user_client_id"/>
+    </changeSet>
+
+</databaseChangeLog>
