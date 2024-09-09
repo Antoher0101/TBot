@@ -5,6 +5,8 @@ import com.mawus.bot.exceptions.HandlerNotFoundException;
 import com.mawus.bot.handlers.ActionHandler;
 import com.mawus.bot.handlers.Command;
 import com.mawus.bot.handlers.UpdateHandler;
+import com.mawus.core.domain.ClientAction;
+import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     protected Map<Command, UpdateHandler> updateHandlers;
     protected Map<Command, ActionHandler> actionHandlers;
 
-    public TelegramBot(BotConfig config) throws TelegramApiException {
+    protected final ClientActionRepository clientActionRepository;
+
+    public TelegramBot(BotConfig config, ClientActionRepository clientActionRepository) throws TelegramApiException {
         this.botUsername = config.getBotUsername();
         this.botToken = config.getBotToken();
         this.reconnectPause = config.getReconnectPause();
+        this.clientActionRepository = clientActionRepository;
     }
 
     @Override
@@ -109,7 +114,17 @@ public class TelegramBot extends TelegramLongPollingBot {
             return false;
         }
 
-        // todo action
+        ClientAction clientAction = clientActionRepository.findByChatId(update.getMessage().getChatId());
+        if (clientAction == null) {
+            return false;
+        }
+
+        ActionHandler actionHandler = actionHandlers.get(clientAction.getCommand());
+        if (actionHandler == null) {
+            throw new HandlerNotFoundException("Failed to find action handler");
+        }
+
+        actionHandler.handleAction(this, update, clientAction.getAction());
         return true;
     }
 

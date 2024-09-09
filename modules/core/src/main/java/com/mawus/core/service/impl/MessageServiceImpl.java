@@ -5,7 +5,7 @@ import com.mawus.core.repository.MessageRepository;
 import com.mawus.core.service.MessageService;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("core_messageService")
 public class MessageServiceImpl implements MessageService {
 
     protected final MessageRepository messageRepository;

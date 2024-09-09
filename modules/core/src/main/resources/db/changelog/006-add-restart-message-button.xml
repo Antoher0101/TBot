@@ -1,0 +1,15 @@
+<databaseChangeLog
+xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<changeSet id="1-add-start-message-button" author="mawus">
+    <insert tableName="bot_message">
+        <column name="id" valueComputed="uuid_generate_v4()"/>
+        <column name="name" value="RESTART_MESSAGE"/>
+        <column name="description" value="Start message for existing user"/>
+        <column name="text" value="Добро пожаловать!"/>
+    </insert>
+</changeSet>
+
+</databaseChangeLog>

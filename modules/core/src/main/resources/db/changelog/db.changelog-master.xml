@@ -9,5 +9,7 @@
     <include file="db/changelog/001-create-initial-schema.xml"/>
     <include file="db/changelog/002-add-user-client-relation.xml"/>
     <include file="db/changelog/003-add-start-message-button.xml"/>
+    <include file="db/changelog/005-activate-uuid-generation.xml"/>
+    <include file="/db/changelog/006-add-restart-message-button.xml"/>
 
 </databaseChangeLog>

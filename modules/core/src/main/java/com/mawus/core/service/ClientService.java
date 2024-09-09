@@ -4,8 +4,6 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class ClientService {
 
