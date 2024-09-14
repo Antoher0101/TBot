@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class ClientActionRepositoryImpl implements ClientActionRepository {
+public class InMemoryClientActionRepository implements ClientActionRepository {
 
     private final Map<Long, ClientAction> clientsAction = new ConcurrentHashMap<>();
 

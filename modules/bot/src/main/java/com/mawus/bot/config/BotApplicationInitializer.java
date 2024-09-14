@@ -4,11 +4,14 @@ import com.mawus.bot.TelegramBot;
 import com.mawus.bot.handlers.ActionHandler;
 import com.mawus.bot.handlers.CommandHandler;
 import com.mawus.bot.handlers.UpdateHandler;
+import com.mawus.bot.handlers.commands.EnterRegistrationPhoneCommand;
 import com.mawus.bot.handlers.commands.RegistrationCommandHandler;
+import com.mawus.bot.handlers.commands.EnterRegistrationNameCommandHandler;
 import com.mawus.bot.handlers.commands.StartCommandHandler;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistryImpl;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
+import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
 import com.mawus.core.service.MessageService;
 import com.mawus.core.service.UserService;
@@ -28,16 +31,18 @@ public class BotApplicationInitializer implements InitializingBean {
 
     protected ClientActionRepository clientActionRepository;
     protected CommandHandlerRegistry commandHandlerRegistry;
+    protected ClientCommandStateRepository clientCommandStateRepository;
     protected List<UpdateHandler> updateHandlers;
     protected List<ActionHandler> actionHandlers;
 
     public BotApplicationInitializer(TelegramBot telegramBot, ClientService clientService, UserService userService, MessageService messageService,
-                                     ClientActionRepository clientActionRepository) {
+                                     ClientActionRepository clientActionRepository, ClientCommandStateRepository clientCommandStateRepository) {
         this.telegramBot = telegramBot;
         this.clientService = clientService;
         this.userService = userService;
         this.messageService = messageService;
         this.clientActionRepository = clientActionRepository;
+        this.clientCommandStateRepository = clientCommandStateRepository;
     }
 
     @Override
@@ -53,7 +58,8 @@ public class BotApplicationInitializer implements InitializingBean {
         commandHandlerRegistry = new CommandHandlerRegistryImpl();
         List<CommandHandler> commandHandlers = new ArrayList<>();
 
-        /*...*/
+        commandHandlers.add(new EnterRegistrationNameCommandHandler(commandHandlerRegistry, clientCommandStateRepository, clientService, clientActionRepository));
+        commandHandlers.add(new EnterRegistrationPhoneCommand(commandHandlerRegistry, clientCommandStateRepository, clientService, clientActionRepository));
 
         commandHandlerRegistry.setCommandHandlers(commandHandlers);
     }
@@ -62,11 +68,14 @@ public class BotApplicationInitializer implements InitializingBean {
         updateHandlers = new ArrayList<>();
 
         updateHandlers.add(new StartCommandHandler(clientService, userService, messageService));
-        updateHandlers.add(new RegistrationCommandHandler(userService, clientService));
+        updateHandlers.add(new RegistrationCommandHandler(commandHandlerRegistry, clientCommandStateRepository, userService, clientService));
     }
 
     protected void initActionHandlers() {
         actionHandlers = new ArrayList<>();
+
+        actionHandlers.add(new EnterRegistrationNameCommandHandler(commandHandlerRegistry, clientCommandStateRepository, clientService, clientActionRepository));
+        actionHandlers.add(new EnterRegistrationPhoneCommand(commandHandlerRegistry, clientCommandStateRepository, clientService, clientActionRepository));
     }
 
     protected void initTelegramBotHandlers() {

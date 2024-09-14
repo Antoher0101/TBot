@@ -1,6 +1,6 @@
 package com.mawus.bot.handlers.commands;
 
-import com.mawus.bot.handlers.Command;
+import com.mawus.core.domain.Command;
 import com.mawus.bot.handlers.UpdateHandler;
 import com.mawus.bot.model.Button;
 import com.mawus.core.entity.Client;

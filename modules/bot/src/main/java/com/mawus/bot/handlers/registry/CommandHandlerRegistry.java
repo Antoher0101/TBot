@@ -1,6 +1,6 @@
 package com.mawus.bot.handlers.registry;
 
-import com.mawus.bot.handlers.Command;
+import com.mawus.core.domain.Command;
 import com.mawus.bot.handlers.CommandHandler;
 
 import java.util.List;

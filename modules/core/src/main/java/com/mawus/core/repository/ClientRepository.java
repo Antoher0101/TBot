@@ -19,4 +19,14 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Modifying
     @Query("update bot$Client b set b.active = ?1 where b.id = ?2")
     void updateActiveById(boolean active, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query("update bot$Client b set b.name = ?1 where b.id = ?2")
+    void updateNameById(String name, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query("update bot$Client b set b.phoneNumber = ?1 where b.id = ?2")
+    int updatePhoneNumberById(String phoneNumber, UUID id);
 }

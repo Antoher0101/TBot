@@ -4,6 +4,8 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ClientService {
 
@@ -21,7 +23,15 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public void updateClientName(String name, UUID id) {
+        clientRepository.updateNameById(name, id);
+    }
+
     public void update(Client client) {
         clientRepository.updateActiveById(client.isActive(), client.getId());
+    }
+
+    public void updateClientPhone(String phone, UUID id) {
+        clientRepository.updatePhoneNumberById(phone, id);
     }
 }
