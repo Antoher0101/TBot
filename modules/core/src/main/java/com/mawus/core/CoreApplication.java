@@ -20,7 +20,7 @@ public class CoreApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Joining thread, you can press Ctrl+C to shutdown application");
+        log.info("Core module joining the thread.");
         Thread.currentThread().join();
     }
 }
