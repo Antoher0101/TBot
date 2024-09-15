@@ -22,8 +22,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-@Component("bot_EnterRegistrationPhoneCommand")
-public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHandler {
+@Component("bot_EnterRegistrationPhoneCommandHandler")
+public class EnterRegistrationPhoneCommandHandler implements CommandHandler, ActionHandler {
 
     private static final String ENTER_PHONE_ACTION = "registration:enter-phone";
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{10,15}$");
@@ -36,7 +36,7 @@ public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHand
 
     private final ClientActionRepository clientActionRepository;
 
-    public EnterRegistrationPhoneCommand(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
+    public EnterRegistrationPhoneCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
         this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.clientService = clientService;
