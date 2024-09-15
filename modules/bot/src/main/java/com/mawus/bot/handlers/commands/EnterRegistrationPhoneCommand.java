@@ -10,6 +10,7 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -21,6 +22,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+@Component("bot_EnterRegistrationPhoneCommand")
 public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHandler {
 
     private static final String ENTER_PHONE_ACTION = "registration:enter-phone";

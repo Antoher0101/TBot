@@ -10,11 +10,13 @@ import com.mawus.core.entity.User;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
 import com.mawus.core.service.UserService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component("bot_RegistrationCommandHandler")
 public class RegistrationCommandHandler implements UpdateHandler {
 
     private final CommandHandlerRegistry commandHandlerRegistry;

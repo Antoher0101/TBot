@@ -3,12 +3,14 @@ package com.mawus.bot.handlers.registry;
 import com.mawus.bot.exceptions.HandlerNotFoundException;
 import com.mawus.core.domain.Command;
 import com.mawus.bot.handlers.CommandHandler;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Component("bot_CommandHandlerRegistry")
 public class CommandHandlerRegistryImpl implements CommandHandlerRegistry {
 
     private Map<Command, CommandHandler> commandHandlers;
