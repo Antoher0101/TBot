@@ -43,16 +43,14 @@ public class RegistrationCommandHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(AbsSender absSender, Update update) throws TelegramApiException {
-        if (isRegistrationRequestUpdate(update)) {
-            User user = userService.findByChatId(update.getMessage().getChatId());
+        User user = userService.findByChatId(update.getMessage().getChatId());
 
-            if (user == null) {
-                createNewUser(update);
-                executeNextCommand(absSender, update, update.getMessage().getChatId());
-            } else {
-                // Пользователь уже зарегистрирован. Мб он хочет изменить данные? todo после MVP
-                sendAlreadyRegisteredMessage(absSender, update.getMessage().getChatId());
-            }
+        if (user == null) {
+            createNewUser(update);
+            executeNextCommand(absSender, update, update.getMessage().getChatId());
+        } else {
+            // Пользователь уже зарегистрирован. Мб он хочет изменить данные? todo после MVP
+            sendAlreadyRegisteredMessage(absSender, update.getMessage().getChatId());
         }
     }
 

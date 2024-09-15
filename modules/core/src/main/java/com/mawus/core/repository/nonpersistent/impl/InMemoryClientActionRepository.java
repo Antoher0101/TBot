@@ -16,6 +16,9 @@ public class InMemoryClientActionRepository implements ClientActionRepository {
     @Override
     public ClientAction findByChatId(Long chatId) {
         ClientAction clientAction = clientsAction.get(chatId);
+        if (clientAction == null) {
+            return null;
+        }
         return SerializationUtils.clone(clientAction);
     }
 

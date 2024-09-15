@@ -1,9 +1,13 @@
 package com.mawus.core.domain;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class ClientAction implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -9088496692601343536L;
 
     private final Command command;
 

@@ -4,5 +4,8 @@ public enum Command {
     START,
     REGISTRATION,
     ENTER_NAME,
-    ENTER_PHONE_NUMBER
+    ENTER_PHONE_NUMBER,
+    ADD_TRIP,
+    SELECT_TRANSPORT,
+    MOCK
 }

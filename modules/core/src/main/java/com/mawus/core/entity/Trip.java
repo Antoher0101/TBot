@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 @Entity(name = "bot$Trip")
 @Table(name = "bot_trip")
 public class Trip extends BaseUuidEntity {
-    @Column(nullable = false)
+    @Column(name = "transport_number", nullable = false)
     private String transportNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @ManyToOne
     @JoinColumn(name = "transport_id")
@@ -22,10 +26,10 @@ public class Trip extends BaseUuidEntity {
     @JoinColumn(name = "city_to_id")
     private City cityTo;
 
-    @Column(nullable = false)
+    @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
 
-    @Column(nullable = false)
+    @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
     public String getTransportNumber() {
@@ -34,6 +38,14 @@ public class Trip extends BaseUuidEntity {
 
     public void setTransportNumber(String transportNumber) {
         this.transportNumber = transportNumber;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Transport getTransport() {

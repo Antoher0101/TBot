@@ -11,6 +11,7 @@ public enum Button {
     REGISTER("Зарегистрироваться"),
     ENTER_NAME("Ввести имя"),
     ENTER_PHONE("Ввести телефон"),
+    ADD_TRIP("Добавить рейс"),
     CANCEL("Отмена"),
     SKIP("Пропустить"),
     ;
@@ -26,7 +27,7 @@ public enum Button {
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                KeyboardButton.builder().text(START.getAlias()).build() // todo example
+                KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
         )));
 
         return keyboardBuilder.build();

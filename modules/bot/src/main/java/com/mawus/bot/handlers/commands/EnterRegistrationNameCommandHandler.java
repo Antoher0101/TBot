@@ -82,7 +82,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
     private void sendCancelledMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Ввод имени отменен.")
+                .text("Ввод имени отменен")
                 .build();
         absSender.execute(message);
     }

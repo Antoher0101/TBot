@@ -2,6 +2,8 @@ package com.mawus.core.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity(name = "bot$Client")
 @Table(name = "bot_client")
 public class Client extends BaseUuidEntity {
@@ -9,10 +11,10 @@ public class Client extends BaseUuidEntity {
     @Column(name = "chat_id", unique = true, nullable = false)
     private Long chatId;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "is_active", nullable = false)
@@ -20,6 +22,9 @@ public class Client extends BaseUuidEntity {
 
     @OneToOne(mappedBy = "client")
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Trip> trips;
 
     public Long getChatId() {
         return chatId;
@@ -59,5 +64,13 @@ public class Client extends BaseUuidEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 }

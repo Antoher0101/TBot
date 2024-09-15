@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1-create-transport-type-table" author="mawus">
+        <createTable tableName="bot_transport_type">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-initial-transport-type" author="mawus">
+        <insert tableName="bot_transport_type">
+            <column name="id" valueComputed="uuid_generate_v4()"/>
+            <column name="name" value="Поезд"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2-update-transport-table" author="mawus">
+        <dropColumn tableName="bot_transport" columnName="type"/>
+        <addColumn tableName="bot_transport">
+            <column name="transport_type_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3-add-constraints" author="mawus">
+        <addForeignKeyConstraint baseTableName="bot_transport" baseColumnNames="transport_type_id"
+                                 constraintName="fk-transport-transport-type-id"
+                                 referencedTableName="bot_transport_type"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

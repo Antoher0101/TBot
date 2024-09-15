@@ -1,24 +1,24 @@
 package com.mawus.core.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity(name = "bot$Transport")
 @Table(name = "bot_transport")
 public class Transport extends BaseUuidEntity {
-    @Column(nullable = false)
-    private String type; // e.g., car, plane, train
+
+    @ManyToOne
+    @JoinColumn(name = "transport_type_id", nullable = false)
+    private TransportType transportType;
 
     @Column(nullable = false)
     private String number;
 
-    public String getType() {
-        return type;
+    public TransportType getTransportType() {
+        return transportType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTransportType(TransportType transportType) {
+        this.transportType = transportType;
     }
 
     public String getNumber() {
