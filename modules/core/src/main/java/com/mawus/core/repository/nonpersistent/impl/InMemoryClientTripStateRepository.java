@@ -8,6 +8,7 @@ import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,7 +45,31 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
     }
 
     @Override
-    public void discardDraftTrip(Long chatId) {
+    public void disposeDraftTrip(Long chatId) {
         clientsTrip.remove(chatId);
+    }
+
+    @Override
+    public void updateCityDeparture(Long chatId, String cityName) {
+        Trip trip = clientsTrip.get(chatId).getTrip();
+        trip.setCityFrom(cityName);
+    }
+
+    @Override
+    public void updateCityArrival(Long chatId, String cityName) {
+        Trip trip = clientsTrip.get(chatId).getTrip();
+        trip.setCityTo(cityName);
+    }
+
+    @Override
+    public void updateTripDate(Long chatId, LocalDateTime date) {
+        Trip trip = clientsTrip.get(chatId).getTrip();
+        trip.setDepartureTime(date);
+    }
+
+    @Override
+    public boolean isTripComplete(Long chatId) {
+        Trip trip = clientsTrip.get(chatId).getTrip();
+        return false;
     }
 }

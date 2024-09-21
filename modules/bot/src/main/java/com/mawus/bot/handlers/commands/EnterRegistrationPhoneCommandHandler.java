@@ -57,7 +57,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
             handleEnterPhoneAction(absSender, chatId, text);
         }
 
-        endRegistration(absSender, update, chatId);
+        finishRegistration(absSender, update, chatId);
     }
 
     private void handleEnterPhoneAction(AbsSender absSender, Long chatId, String text) throws TelegramApiException {
@@ -73,7 +73,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
         saveClientPhoneNumber(chatId, text);
     }
 
-    private void endRegistration(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
+    private void finishRegistration(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientCommandStateRepository.deleteAllByChatId(chatId);
         clientActionRepository.deleteByChatId(chatId);
         completeRegistration(absSender, chatId);
