@@ -1,7 +1,15 @@
 package com.mawus.core.service;
 
-import org.springframework.stereotype.Service;
+import com.mawus.core.entity.Transport;
+import com.mawus.core.entity.TransportType;
 
-@Service
-public class TransportService {
+import java.util.List;
+
+public interface TransportService {
+
+    List<Transport> findAll();
+
+    List<TransportType> findAllTypes();
+
+    TransportType findByName(String name);
 }

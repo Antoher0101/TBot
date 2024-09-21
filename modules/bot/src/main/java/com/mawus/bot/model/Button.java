@@ -11,9 +11,13 @@ public enum Button {
     REGISTER("Зарегистрироваться"),
     ENTER_NAME("Ввести имя"),
     ENTER_PHONE("Ввести телефон"),
+    ADD_TRIP("Добавить рейс"),
+    ENTER_CITY_DEPARTURE("Город отправления"),
+    ENTER_CITY_ARRIVAL("Город прибытия"),
+    ENTER_TRIP_DATE("Дата отправления"),
     CANCEL("Отмена"),
     SKIP("Пропустить"),
-    ;
+    CONFIRM("Подтвердить");
 
     private final String alias;
 
@@ -26,7 +30,7 @@ public enum Button {
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                KeyboardButton.builder().text(START.getAlias()).build() // todo example
+                KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
         )));
 
         return keyboardBuilder.build();
@@ -41,6 +45,10 @@ public enum Button {
         )));
 
         return keyboardBuilder.build();
+    }
+
+    public static KeyboardButton createButton(String text) {
+        return KeyboardButton.builder().text(text).build();
     }
 
     public String getAlias() {

@@ -11,12 +11,14 @@ import com.mawus.core.service.MessageService;
 import com.mawus.core.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component("bot_StartCommandHandler")
 public class StartCommandHandler implements UpdateHandler {
 
     private static final Logger log = LoggerFactory.getLogger(StartCommandHandler.class);

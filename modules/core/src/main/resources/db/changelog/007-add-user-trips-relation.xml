@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="1-add-client-id-column-to-trip" author="mawus">
+        <addColumn tableName="bot_trip">
+            <column name="client_id" type="uuid"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2-add-user-trips-constraint" author="mawus">
+        <addForeignKeyConstraint baseTableName="bot_trip"
+                                 baseColumnNames="client_id"
+                                 constraintName="fk-trip-client"
+                                 referencedTableName="bot_client"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

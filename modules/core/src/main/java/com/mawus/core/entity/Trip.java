@@ -7,33 +7,43 @@ import java.time.LocalDateTime;
 @Entity(name = "bot$Trip")
 @Table(name = "bot_trip")
 public class Trip extends BaseUuidEntity {
-    @Column(nullable = false)
-    private String transportNumber;
+    @Column(name = "trip_number", nullable = false)
+    private String tripNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @ManyToOne
     @JoinColumn(name = "transport_id")
     private Transport transport;
 
-    @ManyToOne
-    @JoinColumn(name = "city_from_id")
-    private City cityFrom;
+    @Column(name = "city_from")
+    private String cityFrom;
 
-    @ManyToOne
-    @JoinColumn(name = "city_to_id")
-    private City cityTo;
+    @Column(name = "city_to")
+    private String cityTo;
 
-    @Column(nullable = false)
+    @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
 
-    @Column(nullable = false)
+    @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
-    public String getTransportNumber() {
-        return transportNumber;
+    public String getTripNumber() {
+        return tripNumber;
     }
 
-    public void setTransportNumber(String transportNumber) {
-        this.transportNumber = transportNumber;
+    public void setTripNumber(String tripNumber) {
+        this.tripNumber = tripNumber;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Transport getTransport() {
@@ -44,19 +54,19 @@ public class Trip extends BaseUuidEntity {
         this.transport = transport;
     }
 
-    public City getCityFrom() {
+    public String getCityFrom() {
         return cityFrom;
     }
 
-    public void setCityFrom(City cityFrom) {
+    public void setCityFrom(String cityFrom) {
         this.cityFrom = cityFrom;
     }
 
-    public City getCityTo() {
+    public String getCityTo() {
         return cityTo;
     }
 
-    public void setCityTo(City cityTo) {
+    public void setCityTo(String cityTo) {
         this.cityTo = cityTo;
     }
 

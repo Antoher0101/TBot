@@ -10,11 +10,13 @@ import com.mawus.core.entity.User;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
 import com.mawus.core.service.UserService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component("bot_RegistrationCommandHandler")
 public class RegistrationCommandHandler implements UpdateHandler {
 
     private final CommandHandlerRegistry commandHandlerRegistry;
@@ -41,16 +43,14 @@ public class RegistrationCommandHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(AbsSender absSender, Update update) throws TelegramApiException {
-        if (isRegistrationRequestUpdate(update)) {
-            User user = userService.findByChatId(update.getMessage().getChatId());
+        User user = userService.findByChatId(update.getMessage().getChatId());
 
-            if (user == null) {
-                createNewUser(update);
-                executeNextCommand(absSender, update, update.getMessage().getChatId());
-            } else {
-                // Пользователь уже зарегистрирован. Мб он хочет изменить данные? todo после MVP
-                sendAlreadyRegisteredMessage(absSender, update.getMessage().getChatId());
-            }
+        if (user == null) {
+            createNewUser(update);
+            executeNextCommand(absSender, update, update.getMessage().getChatId());
+        } else {
+            // Пользователь уже зарегистрирован. Мб он хочет изменить данные? todo после MVP
+            sendAlreadyRegisteredMessage(absSender, update.getMessage().getChatId());
         }
     }
 

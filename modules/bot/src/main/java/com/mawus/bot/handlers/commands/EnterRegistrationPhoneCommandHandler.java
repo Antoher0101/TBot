@@ -10,6 +10,7 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -21,7 +22,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHandler {
+@Component("bot_EnterRegistrationPhoneCommandHandler")
+public class EnterRegistrationPhoneCommandHandler implements CommandHandler, ActionHandler {
 
     private static final String ENTER_PHONE_ACTION = "registration:enter-phone";
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{10,15}$");
@@ -34,7 +36,7 @@ public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHand
 
     private final ClientActionRepository clientActionRepository;
 
-    public EnterRegistrationPhoneCommand(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
+    public EnterRegistrationPhoneCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
         this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.clientService = clientService;
@@ -55,7 +57,7 @@ public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHand
             handleEnterPhoneAction(absSender, chatId, text);
         }
 
-        endRegistration(absSender, update, chatId);
+        finishRegistration(absSender, update, chatId);
     }
 
     private void handleEnterPhoneAction(AbsSender absSender, Long chatId, String text) throws TelegramApiException {
@@ -71,7 +73,7 @@ public class EnterRegistrationPhoneCommand implements CommandHandler, ActionHand
         saveClientPhoneNumber(chatId, text);
     }
 
-    private void endRegistration(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
+    private void finishRegistration(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientCommandStateRepository.deleteAllByChatId(chatId);
         clientActionRepository.deleteByChatId(chatId);
         completeRegistration(absSender, chatId);

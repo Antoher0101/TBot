@@ -5,10 +5,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @MappedSuperclass
-public class BaseUuidEntity {
+public class BaseUuidEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
