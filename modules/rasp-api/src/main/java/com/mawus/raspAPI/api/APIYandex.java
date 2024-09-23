@@ -1,4 +1,4 @@
-package com.mawus.raspApi.api;
+package com.mawus.raspAPI.api;
 
 import com.mawus.core.domain.rasp.followStations.FollowStations;
 import com.mawus.core.domain.rasp.infoCarrier.InfoCarrier;
@@ -6,28 +6,31 @@ import com.mawus.core.domain.rasp.nearCity.NearCity;
 import com.mawus.core.domain.rasp.nearStations.NearStations;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleStation.ScheduleStation;
+import com.mawus.core.domain.rasp.scheduleStation.Station;
 import com.mawus.core.domain.rasp.stationList.StationList;
-import com.mawus.raspApi.config.RaspApiConfiguration;
-import com.mawus.raspApi.exceptions.FieldHolder;
-import com.mawus.raspApi.exceptions.HTTPClientException;
-import com.mawus.raspApi.exceptions.ParserException;
-import com.mawus.raspApi.exceptions.ValidationException;
-import com.mawus.raspApi.services.APIConnector;
-import com.mawus.raspApi.services.JSONParser;
-import com.mawus.raspApi.services.ParamBuilder;
-import com.mawus.raspApi.services.RequestBuilder;
+import com.mawus.raspAPI.config.RaspAPIConfiguration;
+import com.mawus.raspAPI.exceptions.FieldHolder;
+import com.mawus.raspAPI.exceptions.HTTPClientException;
+import com.mawus.raspAPI.exceptions.ParserException;
+import com.mawus.raspAPI.exceptions.ValidationException;
+import com.mawus.raspAPI.services.APIConnector;
+import com.mawus.raspAPI.services.JSONParser;
+import com.mawus.raspAPI.services.ParamBuilder;
+import com.mawus.raspAPI.services.RequestBuilder;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component("rasp_APIYandex")
 public class APIYandex implements APIMethods {
 
     private final APIConnector APICon;
     private final RequestBuilder request;
     private JSONParser jsonParser;
 
-    public APIYandex(RaspApiConfiguration configuration) throws ValidationException {
+    public APIYandex(RaspAPIConfiguration configuration) throws ValidationException {
         APICon = new APIConnector(configuration.getApiKey());
         request = new RequestBuilder(configuration.getApiLink());
     }
@@ -52,7 +55,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(ScheduleBetStation.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(ScheduleBetStation.class, request.getRequest(), APICon, time);
     }
 
 
@@ -75,7 +78,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(ScheduleStation.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(ScheduleStation.class, request.getRequest(), APICon, time);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(FollowStations.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(FollowStations.class, request.getRequest(), APICon, time);
     }
 
     @Override
@@ -124,7 +127,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(NearStations.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(NearStations.class, request.getRequest(), APICon, time);
     }
 
     @Override
@@ -150,7 +153,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(NearCity.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(NearCity.class, request.getRequest(), APICon, time);
     }
 
     @Override
@@ -172,7 +175,7 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        return jsonParser.parseIntoObject(InfoCarrier.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(InfoCarrier.class, request.getRequest(), APICon, time);
     }
 
     @Override
@@ -182,6 +185,6 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(10);
 
-        return jsonParser.parseIntoObject(StationList.class, request.getRequest(), APICon, time);
+        return jsonParser.deserializeToObject(StationList.class, request.getRequest(), APICon, time);
     }
 }

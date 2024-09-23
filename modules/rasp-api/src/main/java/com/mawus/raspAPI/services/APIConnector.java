@@ -1,8 +1,8 @@
-package com.mawus.raspApi.services;
+package com.mawus.raspAPI.services;
 
-import com.mawus.raspApi.exceptions.FieldHolder;
-import com.mawus.raspApi.exceptions.HTTPClientException;
-import com.mawus.raspApi.exceptions.ValidationException;
+import com.mawus.raspAPI.exceptions.FieldHolder;
+import com.mawus.raspAPI.exceptions.HTTPClientException;
+import com.mawus.raspAPI.exceptions.ValidationException;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;

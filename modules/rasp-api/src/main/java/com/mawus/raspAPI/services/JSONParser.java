@@ -1,9 +1,10 @@
-package com.mawus.raspApi.services;
+package com.mawus.raspAPI.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mawus.raspApi.exceptions.HTTPClientException;
-import com.mawus.raspApi.exceptions.ParserException;
+import com.mawus.raspAPI.exceptions.HTTPClientException;
+import com.mawus.raspAPI.exceptions.ParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,12 +26,20 @@ public class JSONParser {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failUnknownProperties);
     }
 
-    public <T> T parseIntoObject(Class<T> clazz, String request, APIConnector api, Duration time) throws HTTPClientException, ParserException {
+    public <T> T deserializeToObject(Class<T> clazz, String request, APIConnector api, Duration time) throws HTTPClientException, ParserException {
         try {
             InputStream iStream = api.getInputStream(request, time);
             return (T) objectMapper.readValue(iStream, clazz);
         } catch (IOException exceptParse) {
             throw new ParserException("Ошибка при парсинге JSON", exceptParse);
+        }
+    }
+
+    public <T> String serializeToJson(T object) throws ParserException {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new ParserException("Ошибка при сериализации объекта в JSON", e);
         }
     }
 }

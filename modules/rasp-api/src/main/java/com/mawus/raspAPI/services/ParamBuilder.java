@@ -1,4 +1,4 @@
-package com.mawus.raspApi.services;
+package com.mawus.raspAPI.services;
 
 public class ParamBuilder {
 

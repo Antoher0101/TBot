@@ -1,4 +1,4 @@
-package com.mawus.raspApi.api;
+package com.mawus.raspAPI.api;
 
 import com.mawus.core.domain.rasp.followStations.FollowStations;
 import com.mawus.core.domain.rasp.infoCarrier.InfoCarrier;
@@ -7,10 +7,10 @@ import com.mawus.core.domain.rasp.nearStations.NearStations;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleStation.ScheduleStation;
 import com.mawus.core.domain.rasp.stationList.StationList;
-import com.mawus.raspApi.exceptions.HTTPClientException;
-import com.mawus.raspApi.exceptions.ParserException;
-import com.mawus.raspApi.exceptions.ValidationException;
-import com.mawus.raspApi.services.ParamBuilder;
+import com.mawus.raspAPI.exceptions.HTTPClientException;
+import com.mawus.raspAPI.exceptions.ParserException;
+import com.mawus.raspAPI.exceptions.ValidationException;
+import com.mawus.raspAPI.services.ParamBuilder;
 
 public interface APIMethods {
 

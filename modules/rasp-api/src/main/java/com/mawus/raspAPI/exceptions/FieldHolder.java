@@ -1,4 +1,4 @@
-package com.mawus.raspApi.exceptions;
+package com.mawus.raspAPI.exceptions;
 
 public class FieldHolder {
 

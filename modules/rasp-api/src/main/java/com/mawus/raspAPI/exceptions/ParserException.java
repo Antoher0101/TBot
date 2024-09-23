@@ -1,16 +1,15 @@
-package com.mawus.raspApi.exceptions;
+package com.mawus.raspAPI.exceptions;
 
-public class HTTPClientException extends Exception {
-
+public class ParserException extends Exception {
     private final String errorText;
-    private Exception exceptionCaused = null;
+    private Exception exceptionCaused;
 
-    public HTTPClientException(String errorText, Exception exceptionCaused) {
+    public ParserException(String errorText, Exception exceptionCaused) {
         this.errorText = errorText;
         this.exceptionCaused = exceptionCaused;
     }
 
-    public HTTPClientException(String errorText) {
+    public ParserException(String errorText) {
         this.errorText = errorText;
     }
 

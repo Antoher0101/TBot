@@ -1,10 +1,10 @@
-package com.mawus.raspApi.config;
+package com.mawus.raspAPI.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RaspApiConfiguration {
+public class RaspAPIConfiguration {
 
     @Value("${apikey}")
     private String apiKey;
