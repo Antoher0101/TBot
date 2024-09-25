@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1727227767701-1" author="mawus">
+        <addUniqueConstraint columnNames="api_code" constraintName="uc_bot_city_api_code" tableName="bot_city"/>
+        <addNotNullConstraint columnDataType="VARCHAR(255)"
+                              columnName="api_code"
+                              tableName="bot_city"
+                              validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -6,7 +6,6 @@ import com.mawus.core.domain.rasp.nearCity.NearCity;
 import com.mawus.core.domain.rasp.nearStations.NearStations;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleStation.ScheduleStation;
-import com.mawus.core.domain.rasp.scheduleStation.Station;
 import com.mawus.core.domain.rasp.stationList.StationList;
 import com.mawus.raspAPI.config.RaspAPIConfiguration;
 import com.mawus.raspAPI.exceptions.FieldHolder;
@@ -15,7 +14,7 @@ import com.mawus.raspAPI.exceptions.ParserException;
 import com.mawus.raspAPI.exceptions.ValidationException;
 import com.mawus.raspAPI.services.APIConnector;
 import com.mawus.raspAPI.services.JSONParser;
-import com.mawus.raspAPI.services.ParamBuilder;
+import com.mawus.raspAPI.services.RaspQueryParams;
 import com.mawus.raspAPI.services.RequestBuilder;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
-    public ScheduleBetStation getSchedule(ParamBuilder params)
+    public ScheduleBetStation getSchedule(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/search/?");
 
@@ -60,7 +59,7 @@ public class APIYandex implements APIMethods {
 
 
     @Override
-    public ScheduleStation getScheduleStation(ParamBuilder params)
+    public ScheduleStation getScheduleStation(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/schedule/?");
 
@@ -82,7 +81,7 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
-    public FollowStations getFollowList(ParamBuilder params)
+    public FollowStations getFollowList(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/thread/?");
 
@@ -103,7 +102,7 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
-    public NearStations getNearStations(ParamBuilder params)
+    public NearStations getNearStations(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/nearest_stations/?");
 
@@ -131,7 +130,7 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
-    public NearCity getNearCity(ParamBuilder params)
+    public NearCity getNearCity(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/nearest_settlement/?");
 
@@ -157,7 +156,7 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
-    public InfoCarrier getInfoCarrier(ParamBuilder params)
+    public InfoCarrier getInfoCarrier(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/carrier/?");
 

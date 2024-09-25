@@ -13,5 +13,7 @@
     <include file="db/changelog/006-add-restart-message-button.xml"/>
     <include file="/db/changelog/2024/09/17-01-drop-city-relation.xml"/>
     <include file="/db/changelog/2024/09/21-01-transport-number-rename.xml"/>
+    <include file="/db/changelog/2024/09/24-01-add-api-code-city.xml"/>
+    <include file="db/changelog/2024/09/25-01-changelog.xml"/>
 
 </databaseChangeLog>

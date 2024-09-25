@@ -17,7 +17,7 @@ public class RequestBuilder {
         request = url + branch;
     }
 
-    public String addParams(ParamBuilder param) {
+    public String addParams(RaspQueryParams param) {
 
         ArrayList<String> params = new ArrayList<>();
 

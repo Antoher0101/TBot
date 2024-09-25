@@ -10,26 +10,26 @@ import com.mawus.core.domain.rasp.stationList.StationList;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
 import com.mawus.raspAPI.exceptions.ValidationException;
-import com.mawus.raspAPI.services.ParamBuilder;
+import com.mawus.raspAPI.services.RaspQueryParams;
 
 public interface APIMethods {
 
-    ScheduleBetStation getSchedule(ParamBuilder params)
+    ScheduleBetStation getSchedule(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
-    ScheduleStation getScheduleStation(ParamBuilder params)
+    ScheduleStation getScheduleStation(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
-    FollowStations getFollowList(ParamBuilder params)
+    FollowStations getFollowList(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
-    NearStations getNearStations(ParamBuilder params)
+    NearStations getNearStations(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
-    NearCity getNearCity(ParamBuilder params)
+    NearCity getNearCity(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
-    InfoCarrier getInfoCarrier(ParamBuilder params)
+    InfoCarrier getInfoCarrier(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
     StationList getAllowStationsList()
