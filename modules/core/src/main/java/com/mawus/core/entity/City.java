@@ -6,21 +6,24 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity(name = "bot$City")
-@Table(name = "bot_city", indexes = @Index(columnList = "name"))
+@Table(name = "bot_city", indexes = {
+        @Index(name = "IDX_BOT_CITY_ON_TITLE", columnList = "title"),
+        @Index(name = "IDX_BOT_CITY_ON_API_CODE", columnList = "apiCode", unique = true)
+})
 public class City extends BaseUuidEntity {
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @Column(name = "api_code", unique = true, nullable = false)
     private String apiCode;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getApiCode() {
