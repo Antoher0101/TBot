@@ -21,11 +21,5 @@
 
         <dropColumn columnName="city_to_id" tableName="bot_trip"/>
     </changeSet>
-    <changeSet id="1726585836427-8" author="mawus">
-        <dropColumn columnName="type" tableName="bot_transport"/>
-    </changeSet>
-    <changeSet id="1726585836427-1" author="mawus">
-        <dropNotNullConstraint columnDataType="uuid" columnName="transport_id" tableName="bot_trip"/>
-    </changeSet>
 
 </databaseChangeLog>
