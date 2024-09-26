@@ -5,6 +5,7 @@ import com.mawus.core.repository.CityRepository;
 import com.mawus.core.service.CityService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -24,5 +25,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public void saveCities(List<City> cities) {
         cityRepository.saveAll(cities);
+    }
+
+    @Override
+    public Collection<City> findAllCitiesWithTitleAndApiCode() {
+        return cityRepository.findAll();
     }
 }

@@ -17,8 +17,8 @@ public class ScheduleService {
         this.eventPublisher = eventPublisher;
     }
 
-    @Scheduled(cron = "0 0 4 * * SAT")
-    public void triggerFetchSchedule() {
+    @Scheduled(cron = "0 0 4 ? * SAT")
+    public void CityUpdateSchedule() {
         log.info("The scheduled task of retrieving cities from the API has begun now.");
         eventPublisher.publishEvent(new CityUpdateScheduleEvent(this));
     }

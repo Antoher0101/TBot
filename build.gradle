@@ -36,7 +36,7 @@ subprojects {
     }
 
     task bootRunAll {
-        dependsOn ':modules:core:bootRun', ':modules:api:bootRun', ':modules:bot:bootRun', ':modules:rasp-api'
+        dependsOn ':modules:core:bootRun', ':modules:api:bootRun', ':modules:bot:bootRun', ':modules:rasp-api:bootRun'
     }
 
     task buildAll(type: GradleBuild) {
