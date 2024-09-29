@@ -36,6 +36,9 @@ public class RequestBuilder {
         if (!param.getLimit().isEmpty()) {
             params.add("limit=" + param.getLimit());
         }
+        if (!param.getLimit().isEmpty()) {
+            params.add("offset=" + param.getLimit());
+        }
         if (!param.getResultTimezone().isEmpty()) {
             params.add("result_timezone=" + param.getResultTimezone());
         }

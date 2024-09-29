@@ -10,5 +10,9 @@ public interface CityService {
 
     void saveCities(List<City> cities);
 
-    Collection<City> findAllCitiesWithTitleAndApiCode();
+    Collection<City> findAll();
+
+    City findByTitle(String title);
+
+    City findByCode(String code);
 }

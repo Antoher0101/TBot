@@ -7,7 +7,7 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
+import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -23,14 +23,14 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
 
     protected static final String ENTER_ARRIVAL_ACTION = "addTrip:enter-arrival-city";
 
-    protected final ClientTripStateRepository clientTripStateRepository;
+    protected final ClientTripService clientTripService;
 
     public EnterArrivalCommandHandler(ClientActionRepository clientActionRepository,
-                                      ClientTripStateRepository clientTripStateRepository,
+                                      ClientTripService clientTripService,
                                       ClientCommandStateRepository clientCommandStateRepository,
                                       CommandHandlerRegistry commandHandlerRegistry) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
-        this.clientTripStateRepository = clientTripStateRepository;
+        this.clientTripService = clientTripService;
     }
 
     @Override
@@ -55,13 +55,13 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
     }
 
     private void handleEnterArrivalAction(AbsSender absSender, Long chatId, String text) {
-        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
+        ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
 
         if (clientTrip == null) {
             return;
         }
 
-        clientTripStateRepository.updateCityArrival(chatId, text);
+        clientTripService.updateCityArrival(chatId, text);
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {

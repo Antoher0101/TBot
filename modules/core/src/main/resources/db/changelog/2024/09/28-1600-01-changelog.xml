@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1727521600894-1"
+               author="mawus">
+        <addColumn tableName="bot_transport_type">
+            <column name="code"
+                    type="VARCHAR(255)"/>
+        </addColumn>
+        <update tableName="bot_transport_type">
+            <column name="code" value="train"/>
+            <where>name = 'Поезд'</where>
+        </update>
+    </changeSet>
+    <changeSet id="1727521600894-2"
+               author="mawus">
+        <addNotNullConstraint columnName="code"
+                              tableName="bot_transport_type"/>
+    </changeSet>
+    <changeSet id="1727521600894-3"
+               author="mawus">
+        <addUniqueConstraint columnNames="code"
+                             constraintName="uc_bot_transport_type_code"
+                             tableName="bot_transport_type"/>
+    </changeSet>
+
+</databaseChangeLog>

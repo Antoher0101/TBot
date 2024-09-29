@@ -16,7 +16,10 @@ import com.mawus.raspAPI.services.APIConnector;
 import com.mawus.raspAPI.services.JSONParser;
 import com.mawus.raspAPI.services.RaspQueryParams;
 import com.mawus.raspAPI.services.RequestBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -24,7 +27,9 @@ import java.util.List;
 
 @Component("rasp_APIYandex")
 public class APIYandex implements APIMethods {
+    private final Logger log = LoggerFactory.getLogger(APIYandex.class);
 
+    private final RaspAPIConfiguration configuration;
     private final APIConnector APICon;
     private final RequestBuilder request;
     private JSONParser jsonParser;
@@ -32,6 +37,8 @@ public class APIYandex implements APIMethods {
     public APIYandex(RaspAPIConfiguration configuration) throws ValidationException {
         APICon = new APIConnector(configuration.getApiKey());
         request = new RequestBuilder(configuration.getApiLink());
+
+        this.configuration = configuration;
     }
 
     @Override
@@ -53,6 +60,8 @@ public class APIYandex implements APIMethods {
         request.addParams(params);
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
+
+        log.debug("[getSchedule] Query: {}", request.getRequest());
 
         return jsonParser.deserializeToObject(ScheduleBetStation.class, request.getRequest(), APICon, time);
     }
@@ -77,6 +86,8 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
+        log.debug("[getScheduleStation] Query: {}", request.getRequest());
+
         return jsonParser.deserializeToObject(ScheduleStation.class, request.getRequest(), APICon, time);
     }
 
@@ -97,6 +108,8 @@ public class APIYandex implements APIMethods {
 
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
+
+        log.debug("[getFollowList] Query: {}", request.getRequest());
 
         return jsonParser.deserializeToObject(FollowStations.class, request.getRequest(), APICon, time);
     }
@@ -126,6 +139,8 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
+        log.debug("[getNearStations] Query: {}", request.getRequest());
+
         return jsonParser.deserializeToObject(NearStations.class, request.getRequest(), APICon, time);
     }
 
@@ -152,6 +167,8 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
+        log.debug("[getNearCity] Query: {}", request.getRequest());
+
         return jsonParser.deserializeToObject(NearCity.class, request.getRequest(), APICon, time);
     }
 
@@ -174,6 +191,8 @@ public class APIYandex implements APIMethods {
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
+        log.debug("[getInfoCarrier] Query: {}", request.getRequest());
+
         return jsonParser.deserializeToObject(InfoCarrier.class, request.getRequest(), APICon, time);
     }
 
@@ -183,6 +202,8 @@ public class APIYandex implements APIMethods {
 
         jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(10);
+
+        log.debug("[getAllowStationsList] Query: {}", request.getRequest());
 
         return jsonParser.deserializeToObject(StationList.class, request.getRequest(), APICon, time);
     }

@@ -3,7 +3,6 @@ dependencies {
     implementation project(':modules:rasp-api')
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

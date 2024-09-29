@@ -18,17 +18,35 @@ public class Trip extends BaseUuidEntity {
     @JoinColumn(name = "transport_id")
     private Transport transport;
 
-    @Column(name = "city_from")
-    private String cityFrom;
+    @ManyToOne(cascade = CascadeType.DETACH, optional = false)
+    @JoinColumn(name = "city_from_id", nullable = false)
+    private City cityFrom;
 
-    @Column(name = "city_to")
-    private String cityTo;
+    @ManyToOne(cascade = CascadeType.DETACH, optional = false)
+    @JoinColumn(name = "city_to_id", nullable = false)
+    private City cityTo;
 
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
 
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
+
+    public City getCityTo() {
+        return cityTo;
+    }
+
+    public void setCityTo(City cityTo) {
+        this.cityTo = cityTo;
+    }
+
+    public City getCityFrom() {
+        return cityFrom;
+    }
+
+    public void setCityFrom(City cityFrom) {
+        this.cityFrom = cityFrom;
+    }
 
     public String getTripNumber() {
         return tripNumber;
@@ -52,22 +70,6 @@ public class Trip extends BaseUuidEntity {
 
     public void setTransport(Transport transport) {
         this.transport = transport;
-    }
-
-    public String getCityFrom() {
-        return cityFrom;
-    }
-
-    public void setCityFrom(String cityFrom) {
-        this.cityFrom = cityFrom;
-    }
-
-    public String getCityTo() {
-        return cityTo;
-    }
-
-    public void setCityTo(String cityTo) {
-        this.cityTo = cityTo;
     }
 
     public LocalDateTime getDepartureTime() {

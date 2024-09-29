@@ -7,6 +7,7 @@ public class ParamBuilder {
     private String date = "";
     private String transportType = "";
     private String limit = "";
+    private String offset = "";
     private String resultTimezone = "";
     private String withTransfers = "";
     private String station = "";
@@ -145,5 +146,13 @@ public class ParamBuilder {
 
     public void setStationType(String stationType) {
         this.stationType = stationType;
+    }
+
+    public String getOffset() {
+        return offset;
+    }
+
+    public void setOffset(String offset) {
+        this.offset = offset;
     }
 }

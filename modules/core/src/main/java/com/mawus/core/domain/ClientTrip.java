@@ -11,21 +11,23 @@ public class ClientTrip implements Serializable {
     @Serial
     private static final long serialVersionUID = 7879207295678433640L;
 
-    private Trip trip;
+    private TripQuery tripQuery;
 
     private Client client;
 
-    public ClientTrip(Trip trip, Client client) {
-        this.trip = trip;
+    private int offset = 0;
+
+    public ClientTrip(TripQuery trip, Client client) {
+        this.tripQuery = trip;
         this.client = client;
     }
 
-    public Trip getTrip() {
-        return trip;
+    public TripQuery getTripQuery() {
+        return tripQuery;
     }
 
-    public void setTrip(Trip trip) {
-        this.trip = trip;
+    public void setTripQuery(TripQuery tripQuery) {
+        this.tripQuery = tripQuery;
     }
 
     public Client getClient() {
@@ -34,5 +36,22 @@ public class ClientTrip implements Serializable {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientTrip{" +
+                "trip=" + tripQuery +
+                ", client=" + client +
+                ", offset=" + offset +
+                '}';
     }
 }

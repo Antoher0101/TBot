@@ -66,7 +66,7 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
             throw new TransportTypeNotFound(String.format("Transport type '%s' not found", text));
         }
 
-        clientTripStateRepository.updateTripTransportType(chatId, selectedType);
+        clientTripStateRepository.updateTripTransportType(chatId, selectedType.getCode());
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {

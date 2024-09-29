@@ -4,7 +4,7 @@ import com.mawus.core.domain.rasp.stationList.StationList;
 import com.mawus.core.entity.City;
 import com.mawus.core.events.CityUpdateScheduleEvent;
 import com.mawus.core.service.CityService;
-import com.mawus.raspAPI.api.APIYandex;
+import com.mawus.raspAPI.api.APIMethods;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
 import org.slf4j.Logger;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class CityUpdateEventListener implements ApplicationListener<CityUpdateScheduleEvent> {
     private final Logger log = LoggerFactory.getLogger(CityUpdateEventListener.class);
 
-    private final APIYandex apiYandex;
+    private final APIMethods api;
     private final CityService cityService;
 
-    public CityUpdateEventListener(APIYandex apiYandex, CityService cityService) {
-        this.apiYandex = apiYandex;
+    public CityUpdateEventListener(APIMethods api, CityService cityService) {
+        this.api = api;
         this.cityService = cityService;
     }
 
@@ -35,7 +35,7 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
 
         StationList stationList;
         try {
-            stationList = apiYandex.getAllowStationsList();
+            stationList = api.getAllowStationsList();
             log.info("Successfully retrieved station list from API.");
         } catch (HTTPClientException e) {
             log.error("HTTP error while retrieving station list from API.", e);
@@ -60,7 +60,7 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
 
         log.info("Prepared {} cities for validation.", allCities.size());
 
-        Set<String> existingCities = cityService.findAllCitiesWithTitleAndApiCode()
+        Set<String> existingCities = cityService.findAll()
                 .stream()
                 .map(City::getApiCode)
                 .collect(Collectors.toSet());

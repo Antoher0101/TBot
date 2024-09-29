@@ -10,8 +10,8 @@ public class Transport extends BaseUuidEntity {
     @JoinColumn(name = "transport_type_id", nullable = false)
     private TransportType transportType;
 
-    @Column(nullable = false)
-    private String number;
+    @Column(name = "title", nullable = false)
+    private String tile;
 
     public TransportType getTransportType() {
         return transportType;
@@ -21,11 +21,11 @@ public class Transport extends BaseUuidEntity {
         this.transportType = transportType;
     }
 
-    public String getNumber() {
-        return number;
+    public String getTile() {
+        return tile;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setTile(String tile) {
+        this.tile = tile;
     }
 }

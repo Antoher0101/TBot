@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Profile;
 
-@SpringBootApplication(scanBasePackages = {"com.mawus.core"})
+@SpringBootApplication(scanBasePackages = {"com.mawus.core", "com.mawus.raspAPI"})
+@Profile("!test")
 public class RaspApiApplication implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(RaspApiApplication.class);
 

@@ -1,14 +1,12 @@
 package com.mawus.core.repository.nonpersistent.impl;
 
 import com.mawus.core.domain.ClientTrip;
-import com.mawus.core.entity.Transport;
-import com.mawus.core.entity.TransportType;
-import com.mawus.core.entity.Trip;
+import com.mawus.core.domain.TripQuery;
 import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,16 +21,9 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
     }
 
     @Override
-    public void updateTripTransportType(Long chatId, TransportType transportType) {
-        Trip trip = clientsTrip.get(chatId).getTrip();
-        Transport transport = trip.getTransport();
-        if (transport != null) {
-            trip.getTransport().setTransportType(transportType);
-        } else {
-            transport = new Transport();
-            transport.setTransportType(transportType);
-        }
-        trip.setTransport(transport);
+    public void updateTripTransportType(Long chatId, String transportType) {
+        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
+        trip.setTransportType(transportType);
     }
 
     @Override
@@ -50,26 +41,26 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
     }
 
     @Override
-    public void updateCityDeparture(Long chatId, String cityName) {
-        Trip trip = clientsTrip.get(chatId).getTrip();
-        trip.setCityFrom(cityName);
+    public void updateCityDeparture(Long chatId, String cityCode) {
+        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
+        trip.setCityFromTitle(cityCode);
     }
 
     @Override
-    public void updateCityArrival(Long chatId, String cityName) {
-        Trip trip = clientsTrip.get(chatId).getTrip();
-        trip.setCityTo(cityName);
+    public void updateCityArrival(Long chatId, String cityCode) {
+        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
+        trip.setCityToTitle(cityCode);
     }
 
     @Override
-    public void updateTripDate(Long chatId, LocalDateTime date) {
-        Trip trip = clientsTrip.get(chatId).getTrip();
-        trip.setDepartureTime(date);
+    public void updateTripDate(Long chatId, LocalDate date) {
+        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
+        trip.setDate(date);
     }
 
     @Override
     public boolean isTripComplete(Long chatId) {
-        Trip trip = clientsTrip.get(chatId).getTrip();
+        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
         return false;
     }
 }

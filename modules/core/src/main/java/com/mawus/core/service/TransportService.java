@@ -12,4 +12,5 @@ public interface TransportService {
     List<TransportType> findAllTypes();
 
     TransportType findByName(String name);
+    TransportType findByCode(String code);
 }

@@ -7,6 +7,7 @@ public class RaspQueryParams {
     private final String date;
     private final String transportType;
     private final String limit;
+    private final String offset;
     private final String resultTimezone;
     private final String withTransfers;
     private final String station;
@@ -25,6 +26,7 @@ public class RaspQueryParams {
         this.date = builder.date;
         this.transportType = builder.transportType;
         this.limit = builder.limit;
+        this.offset = builder.offset;
         this.resultTimezone = builder.resultTimezone;
         this.withTransfers = builder.withTransfers;
         this.station = builder.station;
@@ -38,22 +40,73 @@ public class RaspQueryParams {
         this.stationType = builder.stationType;
     }
 
-    public String getTo() { return to; }
-    public String getFrom() { return from; }
-    public String getDate() { return date; }
-    public String getTransportType() { return transportType; }
-    public String getLimit() { return limit; }
-    public String getResultTimezone() { return resultTimezone; }
-    public String getWithTransfers() { return withTransfers; }
-    public String getStation() { return station; }
-    public String getDirection() { return direction; }
-    public String getEvent() { return event; }
-    public String getUid() { return uid; }
-    public String getLatitude() { return latitude; }
-    public String getLongitude() { return longitude; }
-    public String getDistance() { return distance; }
-    public String getCode() { return code; }
-    public String getStationType() { return stationType; }
+    public String getTo() {
+        return to;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public String getLimit() {
+        return limit;
+    }
+
+    public String getResultTimezone() {
+        return resultTimezone;
+    }
+
+    public String getWithTransfers() {
+        return withTransfers;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public String getOffset() {
+        return offset;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getStationType() {
+        return stationType;
+    }
 
     public static class Builder {
         private String to = "";
@@ -61,6 +114,7 @@ public class RaspQueryParams {
         private String date = "";
         private String transportType = "";
         private String limit = "";
+        private String offset = "";
         private String resultTimezone = "";
         private String withTransfers = "";
         private String station = "";
@@ -95,6 +149,11 @@ public class RaspQueryParams {
 
         public Builder limit(String limit) {
             this.limit = limit;
+            return this;
+        }
+
+        public Builder offset(String offset) {
+            this.offset = offset;
             return this;
         }
 

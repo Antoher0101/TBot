@@ -7,7 +7,7 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
+import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,14 +26,14 @@ public class EnterDepartureDateAction extends AbstractTripAction {
 
     protected static final String ENTER_DEPARTURE_DATE_ACTION = "addTrip:enter-departure-date";
 
-    protected final ClientTripStateRepository clientTripStateRepository;
+    protected final ClientTripService clientTripService;
 
     public EnterDepartureDateAction(ClientActionRepository clientActionRepository,
-                                      ClientTripStateRepository clientTripStateRepository,
+                                      ClientTripService clientTripService,
                                       ClientCommandStateRepository clientCommandStateRepository,
                                       CommandHandlerRegistry commandHandlerRegistry) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
-        this.clientTripStateRepository = clientTripStateRepository;
+        this.clientTripService = clientTripService;
     }
 
     @Override
@@ -62,14 +63,14 @@ public class EnterDepartureDateAction extends AbstractTripAction {
     }
 
     private void handleEnterDepartureAction(AbsSender absSender, Long chatId, String text) {
-        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
+        ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
 
         if (clientTrip == null) {
             return;
         }
 
-        LocalDateTime tripDate = parseDate(text);
-        clientTripStateRepository.updateTripDate(chatId, tripDate);
+        LocalDate tripDate = parseDate(text);
+        clientTripService.updateTripDate(chatId, tripDate);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class EnterDepartureDateAction extends AbstractTripAction {
         return Command.ENTER_DEPARTURE_DATE;
     }
 
-    private LocalDateTime parseDate(String tripDateText) {
-        return LocalDateTime.parse(tripDateText, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+    private LocalDate parseDate(String tripDateText) {
+        return LocalDate.parse(tripDateText, DateTimeFormatter.ISO_DATE);
     }
 }

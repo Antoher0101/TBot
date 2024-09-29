@@ -6,11 +6,11 @@ import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
+import com.mawus.core.domain.TripQuery;
 import com.mawus.core.entity.Client;
-import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientService;
+import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -19,14 +19,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component("bot_AddTripCommandHandler")
 public class AddTripCommandHandler implements UpdateHandler {
 
-    private final ClientTripStateRepository clientTripStateRepository;
+    private final ClientTripService clientTripService;
     private final ClientCommandStateRepository clientCommandStateRepository;
 
     private final CommandHandlerRegistry commandHandlerRegistry;
     private final ClientService clientService;
 
-    public AddTripCommandHandler(ClientTripStateRepository clientTripStateRepository, ClientCommandStateRepository clientCommandStateRepository, CommandHandlerRegistry commandHandlerRegistry, ClientService clientService) {
-        this.clientTripStateRepository = clientTripStateRepository;
+    public AddTripCommandHandler(ClientTripService clientTripService, ClientCommandStateRepository clientCommandStateRepository, CommandHandlerRegistry commandHandlerRegistry, ClientService clientService) {
+        this.clientTripService = clientTripService;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientService = clientService;
@@ -43,7 +43,7 @@ public class AddTripCommandHandler implements UpdateHandler {
     public void handleUpdate(AbsSender absSender, Update update) throws TelegramApiException {
         Long chatId = update.getMessage().getChatId();
 
-        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
+        ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
         if (clientTrip != null) {
             return;
         }
@@ -55,13 +55,13 @@ public class AddTripCommandHandler implements UpdateHandler {
 
     private void createNewDraftTrip(Long chatId) {
         ClientTrip clientTrip;
-        Trip trip = new Trip();
+        TripQuery trip = new TripQuery();
         Client client = clientService.findByChatId(chatId);
         if (client == null) {
             throw new ClientNotFoundException();
         }
         clientTrip = new ClientTrip(trip, client);
-        clientTripStateRepository.createDraftTrip(chatId, clientTrip);
+        clientTripService.createDraftTrip(chatId, clientTrip);
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {

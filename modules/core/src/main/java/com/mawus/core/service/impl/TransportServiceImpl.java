@@ -34,4 +34,9 @@ public class TransportServiceImpl implements TransportService {
     public TransportType findByName(String name) {
         return transportTypeRepository.findByName(name).orElse(null);
     }
+
+    @Override
+    public TransportType findByCode(String code) {
+        return transportTypeRepository.findByCode(code).orElse(null);
+    }
 }

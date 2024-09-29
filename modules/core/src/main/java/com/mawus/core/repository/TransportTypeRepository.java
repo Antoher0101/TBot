@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface TransportTypeRepository extends JpaRepository<TransportType, UUID> {
     Optional<TransportType> findByName(String name);
+
+    Optional<TransportType> findByCode(String code);
 }
