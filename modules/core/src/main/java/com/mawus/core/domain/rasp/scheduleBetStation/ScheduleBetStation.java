@@ -1,6 +1,7 @@
 package com.mawus.core.domain.rasp.scheduleBetStation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mawus.core.domain.rasp.Pagination;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class ScheduleBetStation {
     private List<IntervalSegments> intervalSegments; // interval_segments
     private List<Segment> segments;
     private Search search;
+    private Pagination pagination;
 
     public List<IntervalSegments> getIntervalSegments() {
         return intervalSegments;
@@ -34,5 +36,13 @@ public class ScheduleBetStation {
 
     public void setSearch(Search search) {
         this.search = search;
+    }
+
+    public Pagination getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 }

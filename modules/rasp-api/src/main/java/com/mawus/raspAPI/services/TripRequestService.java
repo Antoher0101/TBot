@@ -1,6 +1,7 @@
 package com.mawus.raspAPI.services;
 
 import com.mawus.core.domain.TripQuery;
+import com.mawus.core.domain.TripResponse;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleBetStation.Segment;
 import com.mawus.core.entity.Transport;
@@ -34,7 +35,7 @@ public class TripRequestService {
         this.transportService = transportService;
     }
 
-    public List<Trip> fetchNextStations(TripQuery trip, long offset) throws ParserException, ValidationException, HTTPClientException {
+    public TripResponse fetchNextStations(TripQuery trip, long offset) throws ParserException, ValidationException, HTTPClientException {
         RaspQueryParams queryParams = new RaspQueryParams.Builder()
                 .offset(String.valueOf(offset))
                 .from(trip.getCityFromTitle())
@@ -48,7 +49,8 @@ public class TripRequestService {
             return null;
         }
         List<Segment> segments = stations.getSegments();
-        return segments.stream().map(this::segmentToTrip).collect(Collectors.toList());
+        List<Trip> trips = segments.stream().map(this::segmentToTrip).toList();
+        return new TripResponse(trips, stations.getPagination().getTotal());
     }
 
     private Trip segmentToTrip(Segment segment) {
