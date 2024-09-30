@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("bot_TripRequestService")
@@ -49,7 +50,7 @@ public class TripRequestService {
             return null;
         }
         List<Segment> segments = stations.getSegments();
-        List<Trip> trips = segments.stream().map(this::segmentToTrip).toList();
+        Set<Trip> trips = segments.stream().map(this::segmentToTrip).collect(Collectors.toSet());
         return new TripResponse(trips, stations.getPagination().getTotal());
     }
 

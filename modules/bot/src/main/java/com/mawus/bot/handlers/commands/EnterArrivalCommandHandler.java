@@ -7,6 +7,7 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
+import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -29,7 +30,7 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
                                       ClientTripService clientTripService,
                                       ClientCommandStateRepository clientCommandStateRepository,
                                       CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
     }
 
@@ -50,7 +51,6 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
         }
 
         handleEnterArrivalAction(absSender, chatId, text);
-        finish(chatId);
         executeNextCommand(absSender, update, chatId);
     }
 

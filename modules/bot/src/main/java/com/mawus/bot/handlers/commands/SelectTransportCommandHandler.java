@@ -9,6 +9,7 @@ import com.mawus.core.entity.TransportType;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
+import com.mawus.core.service.ClientTripService;
 import com.mawus.core.service.TransportService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,16 +27,14 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
     protected static final String SELECT_TRANSPORT_ACTION = "addTrip:select-transport";
 
     protected final TransportService transportService;
-    protected final ClientTripStateRepository clientTripStateRepository;
 
     public SelectTransportCommandHandler(ClientActionRepository clientActionRepository,
+                                         ClientTripService clientTripService,
                                          TransportService transportService,
-                                         ClientTripStateRepository clientTripStateRepository,
                                          ClientCommandStateRepository clientCommandStateRepository,
                                          CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.transportService = transportService;
-        this.clientTripStateRepository = clientTripStateRepository;
     }
 
     @Override
@@ -55,7 +54,6 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
         }
 
         handleSelectTransportTypeAction(absSender, chatId, text);
-        finish(chatId);
         executeNextCommand(absSender, update, chatId);
     }
 
@@ -66,7 +64,7 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
             throw new TransportTypeNotFound(String.format("Transport type '%s' not found", text));
         }
 
-        clientTripStateRepository.updateTripTransportType(chatId, selectedType.getCode());
+        clientTripService.updateTripTransportType(chatId, selectedType.getCode());
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {

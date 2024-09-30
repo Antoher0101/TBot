@@ -7,6 +7,7 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
+import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,8 +26,11 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
 
     private final ClientTripService clientTripService;
 
-    public EnterDepartureCommandHandler(ClientCommandStateRepository clientCommandStateRepository, CommandHandlerRegistry commandHandlerRegistry, ClientActionRepository clientActionRepository, ClientTripService clientTripService) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
+    public EnterDepartureCommandHandler(ClientCommandStateRepository clientCommandStateRepository,
+                                        CommandHandlerRegistry commandHandlerRegistry,
+                                        ClientActionRepository clientActionRepository,
+                                        ClientTripService clientTripService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
     }
 
@@ -48,7 +52,6 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
         }
 
         handleEnterDepartureAction(absSender, chatId, text);
-        finish(chatId);
         executeNextCommand(absSender, update, chatId);
     }
 
@@ -65,13 +68,6 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
     @Override
     public void executeCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), ENTER_DEPARTURE_ACTION));
-
-        ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
-
-        if (clientTrip == null) {
-            return;
-        }
-
         sendEnterCityDepartureMessage(absSender, chatId);
     }
 
@@ -92,8 +88,6 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
                 .replyMarkup(buildReplyKeyboard())
                 .build();
         absSender.execute(message);
-
-        clientTripService.updateCityDeparture(chatId, ENTER_DEPARTURE_ACTION);
     }
 
     private ReplyKeyboardMarkup buildReplyKeyboard() {

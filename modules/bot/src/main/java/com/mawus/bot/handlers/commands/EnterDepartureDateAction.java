@@ -7,6 +7,7 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
+import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,8 +18,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Component("bot_EnterDepartureDateAction")
@@ -29,10 +30,10 @@ public class EnterDepartureDateAction extends AbstractTripAction {
     protected final ClientTripService clientTripService;
 
     public EnterDepartureDateAction(ClientActionRepository clientActionRepository,
-                                      ClientTripService clientTripService,
-                                      ClientCommandStateRepository clientCommandStateRepository,
-                                      CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
+                                    ClientTripService clientTripService,
+                                    ClientCommandStateRepository clientCommandStateRepository,
+                                    CommandHandlerRegistry commandHandlerRegistry) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
     }
 
@@ -53,13 +54,7 @@ public class EnterDepartureDateAction extends AbstractTripAction {
         }
 
         handleEnterDepartureAction(absSender, chatId, text);
-        finish(chatId);
         executeNextCommand(absSender, update, chatId);
-    }
-
-    private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
-        clientCommandStateRepository.pushByChatId(chatId, getCommand());
-        commandHandlerRegistry.find(Command.COMPLETE_TRIP_CREATION).executeCommand(absSender, update, chatId);
     }
 
     private void handleEnterDepartureAction(AbsSender absSender, Long chatId, String text) {
@@ -71,6 +66,35 @@ public class EnterDepartureDateAction extends AbstractTripAction {
 
         LocalDate tripDate = parseDate(text);
         clientTripService.updateTripDate(chatId, tripDate);
+    }
+
+    private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
+        clientCommandStateRepository.pushByChatId(chatId, getCommand());
+        commandHandlerRegistry.find(Command.SELECT_TRIP).executeCommand(absSender, update, chatId);
+    }
+
+    private LocalDate parseDate(String tripDateText) {
+        List<DateTimeFormatter> formatters = List.of(
+                DateTimeFormatter.ISO_DATE,
+                DateTimeFormatter.ofPattern("dd.MM.yyyy"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        );
+
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(tripDateText, formatter);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+
+        throw new IllegalArgumentException("Не удалось распознать формат даты: " + tripDateText);
+    }
+
+    @Override
+    public Command getCommand() {
+        return Command.ENTER_DEPARTURE_DATE;
     }
 
     @Override
@@ -95,14 +119,5 @@ public class EnterDepartureDateAction extends AbstractTripAction {
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(true)
                 .build();
-    }
-
-    @Override
-    public Command getCommand() {
-        return Command.ENTER_DEPARTURE_DATE;
-    }
-
-    private LocalDate parseDate(String tripDateText) {
-        return LocalDate.parse(tripDateText, DateTimeFormatter.ISO_DATE);
     }
 }

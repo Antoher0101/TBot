@@ -1,9 +1,13 @@
 package com.mawus.core.domain;
 
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TripQuery {
+public class TripQuery implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -5093281332357760863L;
 
     private String cityFromTitle;
     private String cityToTitle;

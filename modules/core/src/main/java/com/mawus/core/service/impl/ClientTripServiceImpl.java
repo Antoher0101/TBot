@@ -2,12 +2,14 @@ package com.mawus.core.service.impl;
 
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.entity.City;
+import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.CityService;
 import com.mawus.core.service.ClientTripService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service("bot_ClientTripServiceImpl")
 public class ClientTripServiceImpl implements ClientTripService {
@@ -66,5 +68,15 @@ public class ClientTripServiceImpl implements ClientTripService {
     @Override
     public boolean isTripComplete(Long chatId) {
         return clientTripStateRepository.isTripComplete(chatId);
+    }
+
+    @Override
+    public List<Trip> nextTrips(Long chatId) {
+        return null;
+    }
+
+    @Override
+    public List<Trip> previousTrips(Long chatId) {
+        return null;
     }
 }

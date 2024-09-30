@@ -10,6 +10,8 @@ import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
+import com.mawus.core.service.ClientService;
+import com.mawus.core.service.ClientTripService;
 import com.mawus.core.service.TripService;
 import com.mawus.core.service.impl.ClientServiceImpl;
 import org.springframework.stereotype.Component;
@@ -27,16 +29,14 @@ public class CompleteTripCreationCommandAction extends AbstractTripAction {
 
     protected static final String COMPLETE_TRIP_CREATION_ACTION = "addTrip:complete-trip-creation";
 
-    protected final ClientTripStateRepository clientTripStateRepository;
     protected final TripService tripService;
-    private final ClientServiceImpl clientService;
+    private final ClientService clientService;
 
     public CompleteTripCreationCommandAction(ClientActionRepository clientActionRepository,
-                                             ClientTripStateRepository clientTripStateRepository,
+                                             ClientTripService clientTripService,
                                              ClientCommandStateRepository clientCommandStateRepository,
                                              CommandHandlerRegistry commandHandlerRegistry, TripService tripService, ClientServiceImpl clientService) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry);
-        this.clientTripStateRepository = clientTripStateRepository;
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.tripService = tripService;
         this.clientService = clientService;
     }
@@ -56,7 +56,7 @@ public class CompleteTripCreationCommandAction extends AbstractTripAction {
             sendCancelledMessage(absSender, chatId);
         }
         if (Button.CONFIRM.getAlias().equals(text)) {
-            saveTrip(chatId);
+//            saveTrip(chatId);
             finish(chatId);
             sendConfirmMessage(absSender, chatId);
         }
@@ -64,14 +64,6 @@ public class CompleteTripCreationCommandAction extends AbstractTripAction {
     }
 
     private void saveTrip(Long chatId) {
-        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
-        clientTrip.getTrip().setArrivalTime(clientTrip.getTrip().getDepartureTime().plusHours(18).plusMinutes(32)); //todo
-        clientTrip.getTrip().getTransport().setNumber("ЫЫЫ"); //todo
-        clientTrip.getTrip().setTripNumber("RZD224"); //todo
-        Trip trip = clientTrip.getTrip();
-        Client client = clientService.findByChatId(chatId);
-        trip.setClient(client);
-        tripService.saveTrip(clientTrip.getTrip());
     }
 
     private void sendConfirmMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
@@ -86,20 +78,20 @@ public class CompleteTripCreationCommandAction extends AbstractTripAction {
     public void executeCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), COMPLETE_TRIP_CREATION_ACTION));
 
-        comfirmOrCancelMessage(absSender, chatId);
+        confirmMessage(absSender, chatId);
     }
 
-    private void comfirmOrCancelMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
-        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
-        Trip trip = clientTrip.getTrip();
-
-        SendMessage message = SendMessage.builder()
-                .chatId(chatId)
-                .text(String.format("<Тут как-то будет реализована интеграция с API и вылезет список рейсов>\nВаш рейс: \n%s\n%s-%s\n%s-%s", trip.getTransport().getTransportType().getName(),
-                        trip.getCityFrom(), trip.getCityTo(), trip.getDepartureTime(), trip.getArrivalTime()))
-                .replyMarkup(buildReplyKeyboard())
-                .build();
-        absSender.execute(message);
+    private void confirmMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
+//        ClientTrip clientTrip = clientTripStateRepository.findTripByChatId(chatId);
+//        Trip trip = clientTrip.getTripQuery();
+//
+//        SendMessage message = SendMessage.builder()
+//                .chatId(chatId)
+//                .text(String.format("<Тут как-то будет реализована интеграция с API и вылезет список рейсов>\nВаш рейс: \n%s\n%s-%s\n%s-%s", trip.getTransport().getTransportType().getName(),
+//                        trip.getCityFrom(), trip.getCityTo(), trip.getDepartureTime(), trip.getArrivalTime()))
+//                .replyMarkup(buildReplyKeyboard())
+//                .build();
+//        absSender.execute(message);
     }
 
     @Override

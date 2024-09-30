@@ -1,9 +1,11 @@
 package com.mawus.core.service;
 
 import com.mawus.core.domain.ClientTrip;
+import com.mawus.core.entity.Trip;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ClientTripService {
 
@@ -19,4 +21,6 @@ public interface ClientTripService {
 
     boolean isTripComplete(Long chatId);
 
+    List<Trip> nextTrips(Long chatId);
+    List<Trip> previousTrips(Long chatId);
 }
