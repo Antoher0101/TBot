@@ -1,9 +1,8 @@
 package com.mawus.core.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity(name = "bot$City")
 @Table(name = "bot_city", indexes = {
@@ -17,6 +16,9 @@ public class City extends BaseUuidEntity {
 
     @Column(name = "api_code", unique = true, nullable = false)
     private String apiCode;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Station> stations;
 
     public String getTitle() {
         return title;
@@ -32,5 +34,13 @@ public class City extends BaseUuidEntity {
 
     public void setApiCode(String apiCode) {
         this.apiCode = apiCode;
+    }
+
+    public Set<Station> getStations() {
+        return stations;
+    }
+
+    public void setStations(Set<Station> stations) {
+        this.stations = stations;
     }
 }
