@@ -3,6 +3,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
     runtimeOnly 'org.postgresql:postgresql'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 bootJar {

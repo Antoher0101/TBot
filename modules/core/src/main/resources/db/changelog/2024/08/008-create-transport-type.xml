@@ -18,8 +18,21 @@
     </changeSet>
 
     <changeSet id="2-create-initial-transport-type" author="mawus">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="postgresql"/>
+        </preConditions>
         <insert tableName="bot_transport_type">
             <column name="id" valueComputed="uuid_generate_v4()"/>
+            <column name="name" value="Поезд"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create-initial-transport-type-h2" author="mawus">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="h2"/>
+        </preConditions>
+        <insert tableName="bot_transport_type">
+            <column name="id" valueComputed="RANDOM_UUID()"/>
             <column name="name" value="Поезд"/>
         </insert>
     </changeSet>
