@@ -61,4 +61,9 @@ public class CityServiceImpl implements CityService {
             }
         }
     }
+
+    @Override
+    public City findCityByStationCode(String stationCode) {
+        return cityRepository.findCityByStationApiCode(stationCode);
+    }
 }

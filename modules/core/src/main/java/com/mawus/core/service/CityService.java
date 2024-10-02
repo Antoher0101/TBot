@@ -18,5 +18,6 @@ public interface CityService {
 
     void saveCityWithStations(List<City> city);
 
+    City findCityByStationCode(String stationCode);
 }
 

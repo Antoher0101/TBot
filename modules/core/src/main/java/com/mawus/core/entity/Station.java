@@ -16,9 +16,11 @@ public class Station extends BaseUuidEntity {
     @Column(name = "api_code", unique = true, nullable = false)
     private String apiCode;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
     private City city;
+
+    //todo Type
 
     public String getName() {
         return name;

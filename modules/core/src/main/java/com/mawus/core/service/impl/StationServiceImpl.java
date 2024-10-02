@@ -7,6 +7,7 @@ import com.mawus.core.repository.StationRepository;
 import com.mawus.core.service.StationService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service("bot_StationServiceImpl")
@@ -40,5 +41,10 @@ public class StationServiceImpl implements StationService {
             station.setCity(city);
             stationRepository.save(station);
         }
+    }
+
+    @Override
+    public List<Station> getStationsForCity(City city) {
+        return stationRepository.findAllByCity(city);
     }
 }

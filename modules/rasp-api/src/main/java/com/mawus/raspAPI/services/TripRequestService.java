@@ -4,6 +4,7 @@ import com.mawus.core.domain.TripQuery;
 import com.mawus.core.domain.TripResponse;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleBetStation.Segment;
+import com.mawus.core.entity.City;
 import com.mawus.core.entity.Transport;
 import com.mawus.core.entity.Trip;
 import com.mawus.core.service.CityService;
@@ -56,8 +57,12 @@ public class TripRequestService {
 
     private Trip segmentToTrip(Segment segment) {
         Trip trip = new Trip();
-        trip.setCityTo(cityService.findByCode(segment.getTo().getCode()));
-        trip.setCityFrom(cityService.findByCode(segment.getFrom().getCode()));
+
+        City cityFrom = cityService.findCityByStationCode(segment.getFrom().getCode());
+        City cityTo = cityService.findCityByStationCode(segment.getTo().getCode());
+        trip.setCityFrom(cityFrom);
+        trip.setCityTo(cityTo);
+
         trip.setTripNumber(segment.getThread().getNumber());
         trip.setDepartureTime(LocalDateTime.parse(segment.getDeparture(), DateTimeFormatter.ISO_DATE_TIME));
         trip.setArrivalTime(LocalDateTime.parse(segment.getArrival(), DateTimeFormatter.ISO_DATE_TIME));

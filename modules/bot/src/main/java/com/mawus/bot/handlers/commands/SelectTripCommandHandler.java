@@ -77,7 +77,10 @@ public class SelectTripCommandHandler extends AbstractTripAction {
         } catch (ParserException | ValidationException | HTTPClientException e) {
             throw new RuntimeException(e);
         }
-        SendMessage message = SendMessage.builder().text(text).build();
+        SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .build();
         absSender.execute(message);
     }
 

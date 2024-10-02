@@ -5,16 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1727717814606-2" author="mawus">
-        <createTable tableName="bot_city_stations">
-            <column name="bot$city_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bot_city_stations"/>
-            </column>
-            <column name="stations_id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bot_city_stations"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet id="1727717814606-5" author="mawus">
         <createTable tableName="bot_station">
             <column name="id" type="UUID">
@@ -47,10 +37,6 @@
     <changeSet id="1727717814606-11" author="mawus">
         <addNotNullConstraint columnName="title" tableName="bot_transport"/>
     </changeSet>
-    <changeSet id="1727717814606-12" author="mawus">
-        <addUniqueConstraint columnNames="stations_id" constraintName="uc_bot_city_stations_stations"
-                             tableName="bot_city_stations"/>
-    </changeSet>
     <changeSet id="1727717814606-14" author="mawus">
         <addUniqueConstraint columnNames="api_code" constraintName="uc_station_api_code" tableName="bot_station"/>
     </changeSet>
@@ -73,16 +59,6 @@
         <addForeignKeyConstraint baseColumnNames="city_to_id" baseTableName="bot_trip"
                                  constraintName="FK_BOT_TRIP_ON_CITY_TO" referencedColumnNames="id"
                                  referencedTableName="bot_city"/>
-    </changeSet>
-    <changeSet id="1727717814606-19" author="mawus">
-        <addForeignKeyConstraint baseColumnNames="bot$city_id" baseTableName="bot_city_stations"
-                                 constraintName="fk_botcitsta_on_city" referencedColumnNames="id"
-                                 referencedTableName="bot_city"/>
-    </changeSet>
-    <changeSet id="1727717814606-20" author="mawus">
-        <addForeignKeyConstraint baseColumnNames="stations_id" baseTableName="bot_city_stations"
-                                 constraintName="fk_botcitsta_on_station" referencedColumnNames="id"
-                                 referencedTableName="bot_station"/>
     </changeSet>
     <changeSet id="1727717814606-24" author="mawus">
         <dropColumn columnName="city_from" tableName="bot_trip"/>
