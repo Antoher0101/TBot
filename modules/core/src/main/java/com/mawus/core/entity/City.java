@@ -2,6 +2,7 @@ package com.mawus.core.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "bot$City")
@@ -17,8 +18,8 @@ public class City extends BaseUuidEntity {
     @Column(name = "api_code", unique = true, nullable = false)
     private String apiCode;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Station> stations;
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Station> stations = new HashSet<>();
 
     public String getTitle() {
         return title;

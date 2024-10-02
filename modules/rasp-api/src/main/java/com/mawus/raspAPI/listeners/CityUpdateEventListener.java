@@ -1,7 +1,10 @@
 package com.mawus.raspAPI.listeners;
 
+import com.mawus.core.domain.rasp.stationList.ObjStation;
+import com.mawus.core.domain.rasp.stationList.Settlements;
 import com.mawus.core.domain.rasp.stationList.StationList;
 import com.mawus.core.entity.City;
+import com.mawus.core.entity.Station;
 import com.mawus.core.events.CityUpdateScheduleEvent;
 import com.mawus.core.service.CityService;
 import com.mawus.raspAPI.api.APIMethods;
@@ -49,12 +52,7 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
                 .filter(c -> c.getTitle().equals("Россия"))
                 .flatMap(country -> country.getRegions().stream())
                 .flatMap(region -> region.getSettlements().stream())
-                .map(settlement -> {
-                    City c = new City();
-                    c.setTitle(settlement.getTitle());
-                    c.setApiCode(settlement.getCodes().getYandexCode());
-                    return c;
-                })
+                .map(this::mapToCity)
                 .filter(city -> (StringUtils.hasText(city.getTitle()) && StringUtils.hasText(city.getApiCode())))
                 .toList();
 
@@ -72,10 +70,34 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
                 .toList();
 
         if (!newCities.isEmpty()) {
-            cityService.saveCities(newCities);
+            cityService.saveCityWithStations(newCities);
             log.info("Successfully saved {} new cities to the database.", newCities.size());
         } else {
             log.info("No new cities to save. All cities are already in the database.");
         }
+    }
+
+    private City mapToCity(Settlements settlements) {
+        City city = new City();
+        city.setTitle(settlements.getTitle());
+        city.setApiCode(settlements.getCodes().getYandexCode());
+
+        Set<Station> stations = mapStations(settlements);
+        city.setStations(stations);
+
+        return city;
+    }
+
+    private Set<Station> mapStations(Settlements settlement) {
+        return settlement.getStations().stream()
+                .map(this::mapToStation)
+                .collect(Collectors.toSet());
+    }
+
+    private Station mapToStation(ObjStation stationsApi) {
+        Station station = new Station();
+        station.setName(stationsApi.getTitle());
+        station.setApiCode(stationsApi.getCodes().getYandexCode());
+        return station;
     }
 }
