@@ -1,26 +1,26 @@
 package com.mawus.core.entity;
 
+import com.mawus.core.entity.enums.StationType;
 import jakarta.persistence.*;
 
 @Entity(name = "bot$Station")
 @Table(name = "bot_station", indexes = {
         @Index(name = "idx_station_api_code", columnList = "api_code")
-}, uniqueConstraints = {
-        @UniqueConstraint(name = "uc_station_api_code", columnNames = {"api_code"})
 })
 public class Station extends BaseUuidEntity {
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "api_code", unique = true, nullable = false)
+    @Column(name = "api_code", nullable = false, unique = true)
     private String apiCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;
 
-    //todo Type
+    @Column(name = "type")
+    private String type;
 
     public String getName() {
         return name;
@@ -44,5 +44,13 @@ public class Station extends BaseUuidEntity {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    public StationType getType() {
+        return StationType.fromId(type);
+    }
+
+    public void setType(StationType type) {
+        this.type = type.getId();
     }
 }

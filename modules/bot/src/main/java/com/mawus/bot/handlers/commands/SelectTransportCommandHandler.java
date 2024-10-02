@@ -8,7 +8,6 @@ import com.mawus.core.domain.Command;
 import com.mawus.core.entity.TransportType;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import com.mawus.core.service.TransportService;
 import org.springframework.stereotype.Component;

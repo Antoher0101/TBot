@@ -8,7 +8,6 @@ import com.mawus.core.domain.Command;
 import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
@@ -16,15 +15,13 @@ import com.mawus.raspAPI.exceptions.ValidationException;
 import com.mawus.raspAPI.services.TripRequestService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Locale;
 
 @Component("bot_SelectTripCommandHandler")
 public class SelectTripCommandHandler extends AbstractTripAction {
@@ -58,7 +55,7 @@ public class SelectTripCommandHandler extends AbstractTripAction {
             sendCancelledMessage(absSender, chatId);
             return;
         }
-
+        finish(chatId);
 //        handleEnterDepartureAction(absSender, chatId, text);
 //        executeNextCommand(absSender, update, chatId);
     }
@@ -96,12 +93,14 @@ public class SelectTripCommandHandler extends AbstractTripAction {
         for (Trip trip : trips) {
             message.append(i).append(". ")
                     .append("Рейс №").append(trip.getTripNumber()).append(" (")
-                    .append(trip.getTransport().getTransportType()).append(") — ")
-                    .append(trip.getTransport().getTile()).append("\n")
+                    .append(trip.getTransport().getTransportType().getName()).append(") — ")
+                    .append(trip.getTransport().getTitle()).append("\n")
                     .append("Отправление: ").append(trip.getCityFrom().getTitle()).append(" — ")
-                    .append(trip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy"))).append("\n")
+                    .append(trip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
+                            .withLocale(new Locale("ru")))).append("\n")
                     .append("Прибытие: ").append(trip.getCityTo().getTitle()).append(" — ")
-                    .append(trip.getArrivalTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy"))).append("\n");
+                    .append(trip.getArrivalTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
+                            .withLocale(new Locale("ru")))).append("\n");
 
             message.append("\n");
             i++;

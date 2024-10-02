@@ -21,11 +21,11 @@ public class Transport extends BaseUuidEntity {
         this.transportType = transportType;
     }
 
-    public String getTile() {
+    public String getTitle() {
         return tile;
     }
 
-    public void setTile(String tile) {
+    public void setTitle(String tile) {
         this.tile = tile;
     }
 }

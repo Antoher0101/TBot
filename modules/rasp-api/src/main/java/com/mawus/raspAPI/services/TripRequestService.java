@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,7 @@ public class TripRequestService {
         RaspQueryParams queryParams = new RaspQueryParams.Builder()
                 .offset(String.valueOf(offset))
                 .from(trip.getCityFromTitle())
+                .transportType(trip.getTransportType())
                 .to(trip.getCityToTitle())
                 .date(trip.getDate().format(DateTimeFormatter.ISO_DATE))
                 .build();
@@ -68,7 +70,7 @@ public class TripRequestService {
         trip.setArrivalTime(LocalDateTime.parse(segment.getArrival(), DateTimeFormatter.ISO_DATE_TIME));
         Transport transport = new Transport();
         transport.setTransportType(transportService.findByCode(segment.getThread().getTransportType()));
-        transport.setTile(segment.getThread().getVehicle());
+        transport.setTitle(segment.getThread().getShortTitle());
         trip.setTransport(transport);
 
         return trip;
