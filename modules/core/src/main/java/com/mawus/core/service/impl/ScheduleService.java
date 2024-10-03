@@ -1,6 +1,6 @@
 package com.mawus.core.service.impl;
 
-import com.mawus.core.events.CityUpdateScheduleEvent;
+import com.mawus.core.events.CityUpdateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,6 +20,6 @@ public class ScheduleService {
     @Scheduled(cron = "${core.scheduler.update-city.cron}")
     public void CityUpdateSchedule() {
         log.info("The scheduled task of retrieving cities from the API has begun now.");
-        eventPublisher.publishEvent(new CityUpdateScheduleEvent(this));
+        eventPublisher.publishEvent(new CityUpdateEvent(this));
     }
 }

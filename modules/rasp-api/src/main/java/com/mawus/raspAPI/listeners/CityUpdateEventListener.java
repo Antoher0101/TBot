@@ -5,7 +5,8 @@ import com.mawus.core.domain.rasp.stationList.Settlements;
 import com.mawus.core.domain.rasp.stationList.StationList;
 import com.mawus.core.entity.City;
 import com.mawus.core.entity.Station;
-import com.mawus.core.events.CityUpdateScheduleEvent;
+import com.mawus.core.entity.enums.StationType;
+import com.mawus.core.events.CityUpdateEvent;
 import com.mawus.core.service.CityService;
 import com.mawus.raspAPI.api.APIMethods;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
@@ -21,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class CityUpdateEventListener implements ApplicationListener<CityUpdateScheduleEvent> {
+public class CityUpdateEventListener implements ApplicationListener<CityUpdateEvent> {
     private final Logger log = LoggerFactory.getLogger(CityUpdateEventListener.class);
 
     private final APIMethods api;
@@ -33,7 +34,7 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
     }
 
     @Override
-    public void onApplicationEvent(CityUpdateScheduleEvent event) {
+    public void onApplicationEvent(CityUpdateEvent event) {
         log.info("Update cities from API event received.");
 
         StationList stationList;
@@ -98,6 +99,7 @@ public class CityUpdateEventListener implements ApplicationListener<CityUpdateSc
         Station station = new Station();
         station.setName(stationsApi.getTitle());
         station.setApiCode(stationsApi.getCodes().getYandexCode());
+        station.setType(StationType.fromId(stationsApi.getStationType()));
         return station;
     }
 }

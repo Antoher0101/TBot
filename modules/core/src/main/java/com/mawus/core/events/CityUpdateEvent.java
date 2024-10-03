@@ -2,9 +2,9 @@ package com.mawus.core.events;
 
 import org.springframework.context.ApplicationEvent;
 
-public class CityUpdateScheduleEvent extends ApplicationEvent {
+public class CityUpdateEvent extends ApplicationEvent {
 
-    public CityUpdateScheduleEvent(Object source) {
+    public CityUpdateEvent(Object source) {
         super(source);
     }
 }
