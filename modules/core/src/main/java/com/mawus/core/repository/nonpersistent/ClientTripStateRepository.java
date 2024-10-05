@@ -21,4 +21,10 @@ public interface ClientTripStateRepository {
     void updateTripDate(Long chatId, LocalDate date);
 
     boolean isTripComplete(Long chatId);
+
+    void updateCurrentPage(Long chatId, int page);
+
+    int toNextPage(Long chatId);
+
+    int toPrevPage(Long chatId);
 }

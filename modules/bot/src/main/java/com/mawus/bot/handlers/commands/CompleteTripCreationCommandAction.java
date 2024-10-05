@@ -52,12 +52,12 @@ public class CompleteTripCreationCommandAction extends AbstractTripAction {
         String text = update.getMessage().getText();
 
         if (Button.CANCEL.getAlias().equals(text)) {
-            finish(chatId);
+            finish(absSender, chatId);
             sendCancelledMessage(absSender, chatId);
         }
         if (Button.CONFIRM.getAlias().equals(text)) {
 //            saveTrip(chatId);
-            finish(chatId);
+            finish(absSender, chatId);
             sendConfirmMessage(absSender, chatId);
         }
 

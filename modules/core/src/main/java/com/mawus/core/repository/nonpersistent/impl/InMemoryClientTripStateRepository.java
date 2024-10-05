@@ -60,7 +60,28 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
 
     @Override
     public boolean isTripComplete(Long chatId) {
-        TripQuery trip = clientsTrip.get(chatId).getTripQuery();
         return false;
+    }
+
+    @Override
+    public void updateCurrentPage(Long chatId, int page) {
+        ClientTrip trip = clientsTrip.get(chatId);
+        trip.setCurrentPage(page);
+    }
+
+    @Override
+    public int toNextPage(Long chatId) {
+        ClientTrip trip = clientsTrip.get(chatId);
+        int nextPage = trip.getCurrentPage() + 1;
+        trip.setCurrentPage(nextPage);
+        return nextPage;
+    }
+
+    @Override
+    public int toPrevPage(Long chatId) {
+        ClientTrip trip = clientsTrip.get(chatId);
+        int prevPage = trip.getCurrentPage() - 1;
+        trip.setCurrentPage(prevPage);
+        return prevPage;
     }
 }

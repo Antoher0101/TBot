@@ -47,7 +47,7 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
         String text = update.getMessage().getText();
 
         if (Button.CANCEL.getAlias().equals(text)) {
-            finish(chatId);
+            finish(absSender, chatId);
             sendCancelledMessage(absSender, chatId);
             return;
         }

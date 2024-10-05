@@ -66,17 +66,22 @@ public class ClientTripServiceImpl implements ClientTripService {
     }
 
     @Override
+    public void updateCurrentPage(Long chatId, int page) {
+        clientTripStateRepository.updateCurrentPage(chatId, page);
+    }
+
+    @Override
+    public int toNextPage(Long chatId) {
+        return clientTripStateRepository.toNextPage(chatId);
+    }
+
+    @Override
+    public int toPrevPage(Long chatId) {
+        return clientTripStateRepository.toPrevPage(chatId);
+    }
+
+    @Override
     public boolean isTripComplete(Long chatId) {
         return clientTripStateRepository.isTripComplete(chatId);
-    }
-
-    @Override
-    public List<Trip> nextTrips(Long chatId) {
-        return null;
-    }
-
-    @Override
-    public List<Trip> previousTrips(Long chatId) {
-        return null;
     }
 }

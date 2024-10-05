@@ -85,7 +85,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void handle(Update update) throws TelegramApiException {
         if (handleCommand(update)) {
-            log.debug("The command {} was performed", update.getMessage().getText());
+            log.debug("The command {} was performed", update.hasMessage()
+                    ? update.getMessage().getText()
+                    : update.getCallbackQuery().getMessage());
             return;
         }
         if (handleAction(update)) {

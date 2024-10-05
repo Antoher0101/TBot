@@ -37,9 +37,14 @@ public abstract class AbstractTripAction implements CommandHandler, ActionHandle
         absSender.execute(message);
     }
 
-    protected void finish(Long chatId) {
+    protected void finish(AbsSender absSender, Long chatId) throws TelegramApiException {
         clientCommandStateRepository.deleteAllByChatId(chatId);
         clientActionRepository.deleteByChatId(chatId);
         clientTripService.disposeDraftTrip(chatId);
+
+        SendMessage message = SendMessage.builder()
+                .replyMarkup(Button.createGeneralMenuKeyboard())
+                .build();
+        absSender.execute(message);
     }
 }

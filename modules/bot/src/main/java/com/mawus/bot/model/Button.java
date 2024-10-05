@@ -5,6 +5,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public enum Button {
     START("/start"),
@@ -29,6 +31,7 @@ public enum Button {
         ReplyKeyboardMarkup.ReplyKeyboardMarkupBuilder keyboardBuilder = ReplyKeyboardMarkup.builder();
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
+        keyboardBuilder.isPersistent(true);
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
         )));

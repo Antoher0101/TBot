@@ -10,6 +10,7 @@ import com.mawus.core.entity.Trip;
 import com.mawus.core.service.CityService;
 import com.mawus.core.service.TransportService;
 import com.mawus.raspAPI.api.APIMethods;
+import com.mawus.raspAPI.config.RaspAPIConfiguration;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
 import com.mawus.raspAPI.exceptions.ValidationException;
@@ -29,11 +30,13 @@ public class TripRequestService {
     private final Logger log = LoggerFactory.getLogger(TripRequestService.class);
 
     private final APIMethods api;
+    private final RaspAPIConfiguration configuration;
     private final CityService cityService;
     private final TransportService transportService;
 
-    public TripRequestService(APIMethods api, CityService cityService, TransportService transportService) {
+    public TripRequestService(APIMethods api, RaspAPIConfiguration configuration, CityService cityService, TransportService transportService) {
         this.api = api;
+        this.configuration = configuration;
         this.cityService = cityService;
         this.transportService = transportService;
     }
@@ -44,6 +47,7 @@ public class TripRequestService {
                 .from(trip.getCityFromTitle())
                 .transportType(trip.getTransportType())
                 .to(trip.getCityToTitle())
+                .limit(String.valueOf(configuration.getQueryLimit()))
                 .date(trip.getDate().format(DateTimeFormatter.ISO_DATE))
                 .build();
 

@@ -15,7 +15,7 @@ public class ClientTrip implements Serializable {
 
     private Client client;
 
-    private int offset = 0;
+    private int currentPage = 1;
 
     public ClientTrip(TripQuery trip, Client client) {
         this.tripQuery = trip;
@@ -38,20 +38,20 @@ public class ClientTrip implements Serializable {
         this.client = client;
     }
 
-    public int getOffset() {
-        return offset;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
     @Override
     public String toString() {
         return "ClientTrip{" +
-                "trip=" + tripQuery +
+                "tripQuery=" + tripQuery +
                 ", client=" + client +
-                ", offset=" + offset +
+                ", currentPage=" + currentPage +
                 '}';
     }
 }
