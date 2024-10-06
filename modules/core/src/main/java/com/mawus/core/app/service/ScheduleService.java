@@ -1,4 +1,4 @@
-package com.mawus.core.service.impl;
+package com.mawus.core.app.service;
 
 import com.mawus.core.events.CityUpdateEvent;
 import org.slf4j.Logger;
