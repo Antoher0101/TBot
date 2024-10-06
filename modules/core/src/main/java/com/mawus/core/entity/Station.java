@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "bot$Station")
 @Table(name = "bot_station", indexes = {
-        @Index(name = "idx_station_api_code", columnList = "api_code")
+        @Index(name = "idx_station_api_code", columnList = "api_code", unique = true)
 })
 public class Station extends BaseUuidEntity {
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1728210067598-3" author="mawus">
+        <addColumn tableName="bot_city">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-4" author="mawus">
+        <addColumn tableName="bot_client">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-5" author="mawus">
+        <addColumn tableName="bot_message">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-6" author="mawus">
+        <addColumn tableName="bot_station">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-7" author="mawus">
+        <addColumn tableName="bot_transport">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-8" author="mawus">
+        <addColumn tableName="bot_transport_type">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-9" author="mawus">
+        <addColumn tableName="bot_trip">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728210067598-10" author="mawus">
+        <addColumn tableName="bot_user">
+            <column name="create_ts" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

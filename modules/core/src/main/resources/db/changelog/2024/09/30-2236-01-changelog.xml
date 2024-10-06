@@ -41,7 +41,7 @@
         <addUniqueConstraint columnNames="api_code" constraintName="uc_station_api_code" tableName="bot_station"/>
     </changeSet>
     <changeSet id="1727717814606-15" author="mawus">
-        <createIndex indexName="idx_station_api_code" tableName="bot_station">
+        <createIndex indexName="idx_station_api_code" tableName="bot_station" unique="true">
             <column name="api_code"/>
         </createIndex>
     </changeSet>
