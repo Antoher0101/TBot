@@ -2,11 +2,14 @@ package com.mawus.core.repository.nonpersistent.impl;
 
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.TripQuery;
+import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,29 +62,57 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
     }
 
     @Override
-    public boolean isTripComplete(Long chatId) {
-        return false;
-    }
-
-    @Override
     public void updateCurrentPage(Long chatId, int page) {
-        ClientTrip trip = clientsTrip.get(chatId);
-        trip.setCurrentPage(page);
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        clientTrip.setCurrentPage(page);
     }
 
     @Override
     public int toNextPage(Long chatId) {
-        ClientTrip trip = clientsTrip.get(chatId);
-        int nextPage = trip.getCurrentPage() + 1;
-        trip.setCurrentPage(nextPage);
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        int nextPage = clientTrip.getCurrentPage() + 1;
+        clientTrip.setCurrentPage(nextPage);
         return nextPage;
     }
 
     @Override
     public int toPrevPage(Long chatId) {
-        ClientTrip trip = clientsTrip.get(chatId);
-        int prevPage = trip.getCurrentPage() - 1;
-        trip.setCurrentPage(prevPage);
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        int prevPage = clientTrip.getCurrentPage() - 1;
+        clientTrip.setCurrentPage(prevPage);
         return prevPage;
+    }
+
+    @Override
+    public void updateTripOffset(Long chatId, Long newOffset) {
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        if (clientTrip != null) {
+            clientTrip.setOffset(newOffset);
+        }
+    }
+
+    @Override
+    public void updateAvailableTrips(Long chatId, List<Trip> newTrips) {
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        if (clientTrip != null) {
+            clientTrip.setAvailableTrips(new ArrayList<>(newTrips));
+        }
+    }
+
+    @Override
+    public void setTrip(Long chatId, Trip trip) {
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        if (clientTrip != null) {
+            clientTrip.setTrip(trip);
+        }
+    }
+
+    @Override
+    public Trip getTrip(Long chatId) {
+        ClientTrip clientTrip = clientsTrip.get(chatId);
+        if (clientTrip != null) {
+            return clientTrip.getTrip();
+        }
+        return null;
     }
 }

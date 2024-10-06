@@ -6,7 +6,6 @@ import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
-import com.mawus.core.repository.nonpersistent.ClientTripStateRepository;
 import com.mawus.core.service.ClientTripService;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -43,6 +42,8 @@ public abstract class AbstractTripAction implements CommandHandler, ActionHandle
         clientTripService.disposeDraftTrip(chatId);
 
         SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text("Возврат к главному меню")
                 .replyMarkup(Button.createGeneralMenuKeyboard())
                 .build();
         absSender.execute(message);

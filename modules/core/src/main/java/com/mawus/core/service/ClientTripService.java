@@ -4,9 +4,9 @@ import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.entity.Trip;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public interface ClientTripService {
 
     void createDraftTrip(Long chatId, ClientTrip clientTrip);
@@ -23,5 +23,9 @@ public interface ClientTripService {
     int toNextPage(Long chatId);
     int toPrevPage(Long chatId);
 
-    boolean isTripComplete(Long chatId);
+    void updateTripOffset(Long chatId, Long newOffset);
+    void updateAvailableTrips(Long chatId, List<Trip> newTrips);
+
+    void setTrip(Long chatId, Trip trip);
+    Trip getTrip(Long chatId);
 }

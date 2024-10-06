@@ -81,7 +81,22 @@ public class ClientTripServiceImpl implements ClientTripService {
     }
 
     @Override
-    public boolean isTripComplete(Long chatId) {
-        return clientTripStateRepository.isTripComplete(chatId);
+    public void updateTripOffset(Long chatId, Long newOffset) {
+        clientTripStateRepository.updateTripOffset(chatId, newOffset);
+    }
+
+    @Override
+    public void updateAvailableTrips(Long chatId, List<Trip> newTrips) {
+        clientTripStateRepository.updateAvailableTrips(chatId, newTrips);
+    }
+
+    @Override
+    public void setTrip(Long chatId, Trip trip) {
+        clientTripStateRepository.setTrip(chatId, trip);
+    }
+
+    @Override
+    public Trip getTrip(Long chatId) {
+        return clientTripStateRepository.getTrip(chatId);
     }
 }
