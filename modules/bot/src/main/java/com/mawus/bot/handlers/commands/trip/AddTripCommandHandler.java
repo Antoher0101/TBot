@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands;
+package com.mawus.bot.handlers.commands.trip;
 
 import com.mawus.bot.exceptions.ClientNotFoundException;
 import com.mawus.bot.handlers.UpdateHandler;

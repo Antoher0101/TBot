@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands;
+package com.mawus.bot.handlers.commands.general;
 
 import com.mawus.core.domain.Command;
 import com.mawus.bot.handlers.UpdateHandler;

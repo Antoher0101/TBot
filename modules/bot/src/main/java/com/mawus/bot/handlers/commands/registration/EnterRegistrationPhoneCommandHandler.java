@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands;
+package com.mawus.bot.handlers.commands.registration;
 
 import com.mawus.bot.handlers.ActionHandler;
 import com.mawus.bot.handlers.CommandHandler;

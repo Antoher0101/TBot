@@ -1,6 +1,7 @@
-package com.mawus.bot.handlers.commands;
+package com.mawus.bot.handlers.commands.trip;
 
 import com.mawus.bot.handlers.UpdateHandler;
+import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
 import com.mawus.core.app.AppContextProvider;
