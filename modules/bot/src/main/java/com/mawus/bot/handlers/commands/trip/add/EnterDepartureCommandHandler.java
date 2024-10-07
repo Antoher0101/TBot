@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands.trip;
+package com.mawus.bot.handlers.commands.trip.add;
 
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
@@ -19,24 +19,25 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
-@Component("bot_EnterArrivalCommandHandler")
-public class EnterArrivalCommandHandler extends AbstractTripAction {
+@Component("bot_EnterDepartureCommandHandler")
+public class EnterDepartureCommandHandler extends AbstractTripAction {
 
-    protected static final String ENTER_ARRIVAL_ACTION = "addTrip:enter-arrival-city";
+    protected static final String ENTER_DEPARTURE_ACTION = "addTrip:enter_departure_city";
 
-    protected final ClientTripService clientTripService;
+    private final ClientTripService clientTripService;
 
-    public EnterArrivalCommandHandler(ClientActionRepository clientActionRepository,
-                                      ClientTripService clientTripService,
-                                      ClientCommandStateRepository clientCommandStateRepository,
-                                      CommandHandlerRegistry commandHandlerRegistry) {
+    public EnterDepartureCommandHandler(ClientCommandStateRepository clientCommandStateRepository,
+                                        CommandHandlerRegistry commandHandlerRegistry,
+                                        ClientActionRepository clientActionRepository,
+                                        ClientTripService clientTripService) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
     }
 
+
     @Override
     public boolean canHandleAction(Update update, String action) {
-        return update.hasMessage() && update.getMessage().hasText() && ENTER_ARRIVAL_ACTION.equals(action);
+        return update.hasMessage() && update.getMessage().hasText() && ENTER_DEPARTURE_ACTION.equals(action);
     }
 
     @Override
@@ -50,44 +51,43 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
             return;
         }
 
-        handleEnterArrivalAction(absSender, chatId, text);
+        handleEnterDepartureAction(absSender, chatId, text);
         executeNextCommand(absSender, update, chatId);
     }
 
-    private void handleEnterArrivalAction(AbsSender absSender, Long chatId, String text) {
+    private void handleEnterDepartureAction(AbsSender absSender, Long chatId, String text) {
         ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
 
         if (clientTrip == null) {
             return;
         }
 
-        clientTripService.updateCityArrival(chatId, text);
-    }
-
-    private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
-        clientCommandStateRepository.pushByChatId(chatId, getCommand());
-        commandHandlerRegistry.find(Command.ENTER_DEPARTURE_DATE).executeCommand(absSender, update, chatId);
+        clientTripService.updateCityDeparture(chatId, text);
     }
 
     @Override
     public void executeCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
-        clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), ENTER_ARRIVAL_ACTION));
-
-        sendEnterArrivalMessage(absSender, chatId);
-    }
-
-    private void sendEnterArrivalMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
-        SendMessage message = SendMessage.builder()
-                .chatId(chatId)
-                .text("Введите город назначения:")
-                .replyMarkup(buildReplyKeyboard())
-                .build();
-        absSender.execute(message);
+        clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), ENTER_DEPARTURE_ACTION));
+        sendEnterCityDepartureMessage(absSender, chatId);
     }
 
     @Override
     public Command getCommand() {
-        return Command.ENTER_CITY_ARRIVAL;
+        return Command.ENTER_CITY_DEPARTUERE;
+    }
+
+    private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
+        clientCommandStateRepository.pushByChatId(chatId, getCommand());
+        commandHandlerRegistry.find(Command.ENTER_CITY_ARRIVAL).executeCommand(absSender, update, chatId);
+    }
+
+    private void sendEnterCityDepartureMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
+        SendMessage message = SendMessage.builder()
+                .chatId(chatId)
+                .text("Введите город отправления:")
+                .replyMarkup(buildReplyKeyboard())
+                .build();
+        absSender.execute(message);
     }
 
     private ReplyKeyboardMarkup buildReplyKeyboard() {

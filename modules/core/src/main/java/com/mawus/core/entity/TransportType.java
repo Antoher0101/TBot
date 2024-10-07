@@ -3,6 +3,7 @@ package com.mawus.core.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import org.apache.commons.text.StringEscapeUtils;
 
 @Entity(name = "bot$TransportType")
 @Table(name = "bot_transport_type")
@@ -43,7 +44,7 @@ public class TransportType extends BaseUuidEntity {
     }
 
     public String getIcon() {
-        return icon;
+        return StringEscapeUtils.unescapeJava(icon);
     }
 
     public void setIcon(String icon) {

@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands.trip;
+package com.mawus.bot.handlers.commands.trip.add;
 
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;

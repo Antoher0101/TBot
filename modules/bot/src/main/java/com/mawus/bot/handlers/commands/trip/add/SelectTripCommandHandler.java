@@ -1,10 +1,12 @@
-package com.mawus.bot.handlers.commands.trip;
+package com.mawus.bot.handlers.commands.trip.add;
 
 import com.mawus.bot.handlers.UpdateHandler;
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
 import com.mawus.core.app.AppContextProvider;
+import com.mawus.core.app.TemplateConstants;
+import com.mawus.core.app.service.TemplateService;
 import com.mawus.core.domain.ClientAction;
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
@@ -42,17 +44,18 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     protected static final String CONFIRM_TRIP_CALLBACK = "selectTrip:confirm-trip";
     protected static final String CANCEL_TRIP_CALLBACK = "selectTrip:cancel-trip";
 
-    private final ClientTripService clientTripService;
-    private final TripRequestService tripRequestService;
-
+    protected final ClientTripService clientTripService;
+    protected final TripRequestService tripRequestService;
+    protected final TemplateService templateService;
     public SelectTripCommandHandler(ClientActionRepository clientActionRepository,
                                     ClientCommandStateRepository clientCommandStateRepository,
                                     CommandHandlerRegistry commandHandlerRegistry,
                                     ClientTripService clientTripService,
-                                    TripRequestService tripRequestService) {
+                                    TripRequestService tripRequestService, TemplateService templateService) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
         this.tripRequestService = tripRequestService;
+        this.templateService = templateService;
     }
 
     @Override
@@ -166,28 +169,14 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     }
 
     public String formatTrips(Collection<Trip> trips, int page, int pageSize, Long totalTrips) {
-        StringBuilder message = new StringBuilder();
-        int startTripNumber = (page - 1) * pageSize + 1;
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("pageSize", pageSize);
+        params.put("totalPages", (int) Math.ceil((double) totalTrips / pageSize));
+        params.put("totalTrips", totalTrips);
+        params.put("trips", trips);
 
-        message.append("Список доступных рейсов (стр. ").append(page).append(" из ")
-                .append((int) Math.ceil((double) totalTrips / pageSize)).append("):\n\n");
-
-        int i = startTripNumber;
-        for (Trip trip : trips) {
-            message.append(i).append(". Рейс №").append(trip.getTripNumber()).append(" (")
-                    .append(trip.getTransport().getTransportType().getName()).append(") — ")
-                    .append(trip.getTransport().getTitle()).append("\n")
-                    .append("Отправление: ").append(trip.getCityFrom().getTitle()).append(" — ")
-                    .append(trip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
-                            .withLocale(new Locale("ru")))).append("\n")
-                    .append("Прибытие: ").append(trip.getCityTo().getTitle()).append(" — ")
-                    .append(trip.getArrivalTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
-                            .withLocale(new Locale("ru")))).append("\n\n");
-            i++;
-        }
-
-        message.append("Выберите рейс для продолжения.");
-        return message.toString();
+        return templateService.processTemplate(TemplateConstants.TRIP_SELECT_LIST_TEMPLATE, params);
     }
 
     public InlineKeyboardMarkup buildPaginationKeyboard(int currentPage, Long totalTrips, int tripsPerPage) {

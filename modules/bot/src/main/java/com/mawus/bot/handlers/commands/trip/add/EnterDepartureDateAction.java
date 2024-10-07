@@ -1,4 +1,4 @@
-package com.mawus.bot.handlers.commands.trip;
+package com.mawus.bot.handlers.commands.trip.add;
 
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
@@ -17,27 +17,29 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
-@Component("bot_EnterDepartureCommandHandler")
-public class EnterDepartureCommandHandler extends AbstractTripAction {
+@Component("bot_EnterDepartureDateAction")
+public class EnterDepartureDateAction extends AbstractTripAction {
 
-    protected static final String ENTER_DEPARTURE_ACTION = "addTrip:enter_departure_city";
+    protected static final String ENTER_DEPARTURE_DATE_ACTION = "addTrip:enter-departure-date";
 
-    private final ClientTripService clientTripService;
+    protected final ClientTripService clientTripService;
 
-    public EnterDepartureCommandHandler(ClientCommandStateRepository clientCommandStateRepository,
-                                        CommandHandlerRegistry commandHandlerRegistry,
-                                        ClientActionRepository clientActionRepository,
-                                        ClientTripService clientTripService) {
+    public EnterDepartureDateAction(ClientActionRepository clientActionRepository,
+                                    ClientTripService clientTripService,
+                                    ClientCommandStateRepository clientCommandStateRepository,
+                                    CommandHandlerRegistry commandHandlerRegistry) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
     }
 
-
     @Override
     public boolean canHandleAction(Update update, String action) {
-        return update.hasMessage() && update.getMessage().hasText() && ENTER_DEPARTURE_ACTION.equals(action);
+        return update.hasMessage() && update.getMessage().hasText() && ENTER_DEPARTURE_DATE_ACTION.equals(action);
     }
 
     @Override
@@ -62,29 +64,50 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
             return;
         }
 
-        clientTripService.updateCityDeparture(chatId, text);
-    }
-
-    @Override
-    public void executeCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
-        clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), ENTER_DEPARTURE_ACTION));
-        sendEnterCityDepartureMessage(absSender, chatId);
-    }
-
-    @Override
-    public Command getCommand() {
-        return Command.ENTER_CITY_DEPARTUERE;
+        LocalDate tripDate = parseDate(text);
+        clientTripService.updateTripDate(chatId, tripDate);
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientCommandStateRepository.pushByChatId(chatId, getCommand());
-        commandHandlerRegistry.find(Command.ENTER_CITY_ARRIVAL).executeCommand(absSender, update, chatId);
+        commandHandlerRegistry.find(Command.SELECT_TRIP).executeCommand(absSender, update, chatId);
     }
 
-    private void sendEnterCityDepartureMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
+    private LocalDate parseDate(String tripDateText) {
+        List<DateTimeFormatter> formatters = List.of(
+                DateTimeFormatter.ISO_DATE,
+                DateTimeFormatter.ofPattern("dd.MM.yyyy"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        );
+
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(tripDateText, formatter);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+
+        throw new IllegalArgumentException("Не удалось распознать формат даты: " + tripDateText);
+    }
+
+    @Override
+    public Command getCommand() {
+        return Command.ENTER_DEPARTURE_DATE;
+    }
+
+    @Override
+    public void executeCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
+        clientActionRepository.updateByChatId(chatId, new ClientAction(getCommand(), ENTER_DEPARTURE_DATE_ACTION));
+
+        sendEnterDepartureDateMessage(absSender, chatId);
+    }
+
+    private void sendEnterDepartureDateMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Введите город отправления:")
+                .text("Введите дату отправления:")
                 .replyMarkup(buildReplyKeyboard())
                 .build();
         absSender.execute(message);
