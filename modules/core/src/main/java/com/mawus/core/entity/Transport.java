@@ -11,7 +11,7 @@ public class Transport extends BaseUuidEntity {
     private TransportType transportType;
 
     @Column(name = "title", nullable = false)
-    private String tile;
+    private String title;
 
     public TransportType getTransportType() {
         return transportType;
@@ -22,10 +22,10 @@ public class Transport extends BaseUuidEntity {
     }
 
     public String getTitle() {
-        return tile;
+        return title;
     }
 
     public void setTitle(String tile) {
-        this.tile = tile;
+        this.title = tile;
     }
 }

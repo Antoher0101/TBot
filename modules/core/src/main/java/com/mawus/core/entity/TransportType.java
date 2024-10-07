@@ -23,6 +23,9 @@ public class TransportType extends BaseUuidEntity {
     @Column(name = "code", unique = true, nullable = false)
     private String code;
 
+    @Column(name = "icon")
+    private String icon;
+
     public String getName() {
         return name;
     }
@@ -37,5 +40,13 @@ public class TransportType extends BaseUuidEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
