@@ -186,13 +186,18 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     public InlineKeyboardMarkup buildPaginationKeyboard(int currentPage, Long totalTrips, Long tripsPerPage) {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-
+        int buttonsPerRow = 8;
         for (int i = 1; i <= tripsPerPage && ((long) (currentPage - 1) * tripsPerPage + i <= totalTrips); i++) {
             Long num = ((currentPage - 1) * tripsPerPage + i);
             rowInline.add(InlineKeyboardButton.builder()
                     .text(String.valueOf(num))
                     .callbackData(String.format(SELECT_TRIP_CALLBACK + "_%d", num))
                     .build());
+
+            if (rowInline.size() == buttonsPerRow) {
+                rowsInline.add(new ArrayList<>(rowInline));
+                rowInline.clear();
+            }
         }
 
         if (!rowInline.isEmpty()) {
