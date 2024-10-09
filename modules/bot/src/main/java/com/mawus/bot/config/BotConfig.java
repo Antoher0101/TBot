@@ -18,6 +18,9 @@ public class BotConfig {
     @Value("${telegram.bot.reconnectPause}")
     private int reconnectPause;
 
+    @Value("${bot.trip.pagination.limit}")
+    private Long tripsLimit;
+
     @Bean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
         return new TelegramBotsApi(DefaultBotSession.class);
@@ -45,5 +48,13 @@ public class BotConfig {
 
     public void setReconnectPause(int reconnectPause) {
         this.reconnectPause = reconnectPause;
+    }
+
+    public Long getTripsLimit() {
+        return tripsLimit;
+    }
+
+    public void setTripsLimit(Long tripsLimit) {
+        this.tripsLimit = tripsLimit;
     }
 }

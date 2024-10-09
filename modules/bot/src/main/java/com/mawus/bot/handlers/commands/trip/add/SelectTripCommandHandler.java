@@ -1,5 +1,6 @@
 package com.mawus.bot.handlers.commands.trip.add;
 
+import com.mawus.bot.config.BotConfig;
 import com.mawus.bot.handlers.UpdateHandler;
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
@@ -47,15 +48,18 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     protected final ClientTripService clientTripService;
     protected final TripRequestService tripRequestService;
     protected final TemplateService templateService;
+    private final BotConfig botConfig;
+
     public SelectTripCommandHandler(ClientActionRepository clientActionRepository,
                                     ClientCommandStateRepository clientCommandStateRepository,
                                     CommandHandlerRegistry commandHandlerRegistry,
                                     ClientTripService clientTripService,
-                                    TripRequestService tripRequestService, TemplateService templateService) {
+                                    TripRequestService tripRequestService, TemplateService templateService, BotConfig botConfig) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
         this.tripRequestService = tripRequestService;
         this.templateService = templateService;
+        this.botConfig = botConfig;
     }
 
     @Override
@@ -126,10 +130,10 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         int currentPage = clientTrip.getCurrentPage();
 
         TripResponse response;
-        int tripsPerPage = 5;
-        long offset = (currentPage - 1L) * tripsPerPage;
+        Long limit = botConfig.getTripsLimit();
+        long offset = (currentPage - 1L) * limit;
         try {
-            response = tripRequestService.fetchNextStations(clientTrip.getTripQuery(), offset);
+            response = tripRequestService.fetchNextStations(clientTrip.getTripQuery(), offset, limit);
         } catch (ParserException | ValidationException | HTTPClientException e) {
             throw new RuntimeException(e);
         }
@@ -147,8 +151,8 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         clientTripService.updateAvailableTrips(chatId, new ArrayList<>(trips));
         clientTripService.updateTripOffset(chatId, offset);
 
-        String text = formatTrips(trips, currentPage, tripsPerPage, response.getTotalResults());
-        InlineKeyboardMarkup keyboardMarkup = buildPaginationKeyboard(currentPage, response.getTotalResults(), tripsPerPage);
+        String text = formatTrips(trips, currentPage, limit, response.getTotalResults());
+        InlineKeyboardMarkup keyboardMarkup = buildPaginationKeyboard(currentPage, response.getTotalResults(), limit);
 
         if (messageId != null) {
             EditMessageText editMessage = EditMessageText.builder()
@@ -168,7 +172,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         }
     }
 
-    public String formatTrips(Collection<Trip> trips, int page, int pageSize, Long totalTrips) {
+    public String formatTrips(Collection<Trip> trips, int page, Long pageSize, Long totalTrips) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("pageSize", pageSize);
@@ -179,12 +183,12 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         return templateService.processTemplate(TemplateConstants.TRIP_SELECT_LIST_TEMPLATE, params);
     }
 
-    public InlineKeyboardMarkup buildPaginationKeyboard(int currentPage, Long totalTrips, int tripsPerPage) {
+    public InlineKeyboardMarkup buildPaginationKeyboard(int currentPage, Long totalTrips, Long tripsPerPage) {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
         for (int i = 1; i <= tripsPerPage && ((long) (currentPage - 1) * tripsPerPage + i <= totalTrips); i++) {
-            int num = ((currentPage - 1) * tripsPerPage + i);
+            Long num = ((currentPage - 1) * tripsPerPage + i);
             rowInline.add(InlineKeyboardButton.builder()
                     .text(String.valueOf(num))
                     .callbackData(String.format(SELECT_TRIP_CALLBACK + "_%d", num))

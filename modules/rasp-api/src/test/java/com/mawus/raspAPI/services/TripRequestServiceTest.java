@@ -34,7 +34,7 @@ class TripRequestServiceTest {
         trip.setDate(LocalDate.parse("2024-09-29"));
 
         try {
-            TripResponse trips = tripRequestService.fetchNextStations(trip, 0L);
+            TripResponse trips = tripRequestService.fetchNextStations(trip, 0L, 5L);
             log.info("Total results: {}", trips.getTotalResults());
             assertNotNull(trips);
         } catch (Exception e) {

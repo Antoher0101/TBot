@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,13 +40,13 @@ public class TripRequestService {
         this.transportService = transportService;
     }
 
-    public TripResponse fetchNextStations(TripQuery trip, long offset) throws ParserException, ValidationException, HTTPClientException {
+    public TripResponse fetchNextStations(TripQuery trip, Long offset, Long limit) throws ParserException, ValidationException, HTTPClientException {
         RaspQueryParams queryParams = new RaspQueryParams.Builder()
                 .offset(String.valueOf(offset))
                 .from(trip.getCityFromTitle())
                 .transportType(trip.getTransportType())
                 .to(trip.getCityToTitle())
-                .limit(String.valueOf(configuration.getQueryLimit()))
+                .limit(String.valueOf(limit != null ? limit : configuration.getQueryLimit()))
                 .date(trip.getDate().format(DateTimeFormatter.ISO_DATE))
                 .build();
 
