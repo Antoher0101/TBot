@@ -12,7 +12,7 @@ public class RaspAPIConfiguration {
     @Value("${apilink}")
     private String apiLink;
 
-    @Value("${api.query.limit}")
+    @Value("${api.default.query.limit}")
     private Integer queryLimit;
 
     public String getApiKey() {
