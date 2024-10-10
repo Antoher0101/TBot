@@ -5,8 +5,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public enum Button {
     START("/start"),
@@ -14,6 +12,7 @@ public enum Button {
     ENTER_NAME("Ввести имя"),
     ENTER_PHONE("Ввести телефон"),
     ADD_TRIP("Добавить рейс"),
+    MY_TRIPS("Мои рейсы"),
     ENTER_CITY_DEPARTURE("Город отправления"),
     ENTER_CITY_ARRIVAL("Город прибытия"),
     ENTER_TRIP_DATE("Дата отправления"),
@@ -32,6 +31,9 @@ public enum Button {
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
         keyboardBuilder.isPersistent(true);
+        keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
+                KeyboardButton.builder().text(MY_TRIPS.getAlias()).build()
+        )));
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
         )));

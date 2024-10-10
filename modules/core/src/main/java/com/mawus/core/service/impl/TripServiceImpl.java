@@ -4,9 +4,10 @@ import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.TransportRepository;
 import com.mawus.core.repository.TripRepository;
 import com.mawus.core.service.TripService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,12 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<Trip> findByClientId(UUID clientId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return tripRepository.findByClient_Id(clientId, pageable);
+    }
+
+    @Override
     public void saveTrip(Trip trip) {
         if (trip.getTransport().getId() == null) {
             transportRepository.save(trip.getTransport());
@@ -36,4 +43,8 @@ public class TripServiceImpl implements TripService {
         tripRepository.save(trip);
     }
 
+    @Override
+    public long countTripsByClient(UUID clientId) {
+        return tripRepository.countByClient_Id(clientId);
+    }
 }
