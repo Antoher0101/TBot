@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity(name = "bot$Trip")
 @Table(name = "bot_trip")
-public class Trip extends BaseUuidEntity {
+public class Trip extends StandardEntity {
     @Column(name = "trip_number", nullable = false)
     private String tripNumber;
 
