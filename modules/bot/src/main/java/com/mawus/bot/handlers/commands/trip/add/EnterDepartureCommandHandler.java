@@ -73,7 +73,7 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
 
     @Override
     public Command getCommand() {
-        return Command.ENTER_CITY_DEPARTUERE;
+        return Command.ENTER_CITY_DEPARTURE;
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {

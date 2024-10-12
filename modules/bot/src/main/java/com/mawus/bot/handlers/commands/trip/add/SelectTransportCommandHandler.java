@@ -69,7 +69,7 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
         clientCommandStateRepository.pushByChatId(chatId, getCommand());
-        commandHandlerRegistry.find(Command.ENTER_CITY_DEPARTUERE).executeCommand(absSender, update, chatId);
+        commandHandlerRegistry.find(Command.ENTER_CITY_DEPARTURE).executeCommand(absSender, update, chatId);
     }
 
     @Override
