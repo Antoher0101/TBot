@@ -3,6 +3,7 @@ package com.mawus.core.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "bot$Trip")
 @Table(name = "bot_trip")
@@ -19,12 +20,18 @@ public class Trip extends StandardEntity {
     private Transport transport;
 
     @ManyToOne(cascade = CascadeType.DETACH, optional = false)
-    @JoinColumn(name = "city_from_id", nullable = false)
-    private City cityFrom;
+    @JoinColumn(name = "station_from_id", nullable = false)
+    private Station stationFrom;
 
     @ManyToOne(cascade = CascadeType.DETACH, optional = false)
-    @JoinColumn(name = "city_to_id", nullable = false)
-    private City cityTo;
+    @JoinColumn(name = "station_to_id", nullable = false)
+    private Station stationTo;
+
+    @ManyToMany
+    @JoinTable(name = "bot_trip_intermediate_city",
+            joinColumns = {@JoinColumn(name = "trip_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "city_id", referencedColumnName = "id")})
+    private List<City> intermediateCities;
 
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
@@ -32,20 +39,20 @@ public class Trip extends StandardEntity {
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
-    public City getCityTo() {
-        return cityTo;
+    public Station getStationFrom() {
+        return stationFrom;
     }
 
-    public void setCityTo(City cityTo) {
-        this.cityTo = cityTo;
+    public void setStationFrom(Station stationFrom) {
+        this.stationFrom = stationFrom;
     }
 
-    public City getCityFrom() {
-        return cityFrom;
+    public Station getStationTo() {
+        return stationTo;
     }
 
-    public void setCityFrom(City cityFrom) {
-        this.cityFrom = cityFrom;
+    public void setStationTo(Station stationTo) {
+        this.stationTo = stationTo;
     }
 
     public String getTripNumber() {
@@ -86,5 +93,13 @@ public class Trip extends StandardEntity {
 
     public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    public List<City> getIntermediateCities() {
+        return intermediateCities;
+    }
+
+    public void setIntermediateCities(List<City> intermediateCities) {
+        this.intermediateCities = intermediateCities;
     }
 }

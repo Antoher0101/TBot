@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1728759080228-3" author="Myawutb">
+        <createTable tableName="bot_trip_intermediate_city">
+            <column name="city_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trip_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1728759080228-7" author="Myawutb">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="bot_trip_intermediate_city"
+                                 constraintName="fk_bottriintcit_on_city" referencedColumnNames="id"
+                                 referencedTableName="bot_city"/>
+    </changeSet>
+    <changeSet id="1728759080228-8" author="Myawutb">
+        <addForeignKeyConstraint baseColumnNames="trip_id" baseTableName="bot_trip_intermediate_city"
+                                 constraintName="fk_bottriintcit_on_trip" referencedColumnNames="id"
+                                 referencedTableName="bot_trip"/>
+    </changeSet>
+
+</databaseChangeLog>

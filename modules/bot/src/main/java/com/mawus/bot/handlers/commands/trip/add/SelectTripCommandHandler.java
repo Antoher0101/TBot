@@ -5,13 +5,13 @@ import com.mawus.bot.handlers.UpdateHandler;
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
-import com.mawus.core.app.AppContextProvider;
 import com.mawus.core.app.TemplateConstants;
 import com.mawus.core.app.service.TemplateService;
 import com.mawus.core.domain.ClientAction;
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.domain.TripResponse;
+import com.mawus.core.entity.City;
 import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
@@ -46,6 +46,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     protected static final String CANCEL_TRIP_CALLBACK = "selectTrip:cancel-trip";
 
     protected final ClientTripService clientTripService;
+    protected final TripService tripService;
     protected final TripRequestService tripRequestService;
     protected final TemplateService templateService;
     private final BotConfig botConfig;
@@ -53,10 +54,11 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     public SelectTripCommandHandler(ClientActionRepository clientActionRepository,
                                     ClientCommandStateRepository clientCommandStateRepository,
                                     CommandHandlerRegistry commandHandlerRegistry,
-                                    ClientTripService clientTripService,
+                                    ClientTripService clientTripService, TripService tripService,
                                     TripRequestService tripRequestService, TemplateService templateService, BotConfig botConfig) {
         super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
         this.clientTripService = clientTripService;
+        this.tripService = tripService;
         this.tripRequestService = tripRequestService;
         this.templateService = templateService;
         this.botConfig = botConfig;
@@ -268,7 +270,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
                     .text("Вы выбрали рейс №" + selectedTrip.getTripNumber() + "\n"
                             + "Отправление: " + selectedTrip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
                             .withLocale(new Locale("ru"))) + "\n"
-                            + "Место назначения: " + selectedTrip.getCityTo().getTitle())
+                            + "Место назначения: " + selectedTrip.getStationTo().getCity().getTitle())
                     .replyMarkup(buildConfirmationKeyboard())
                     .build();
             absSender.execute(confirmationMessage);
@@ -301,7 +303,10 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
 
     private void doConfirmTrip(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {
         ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
-        AppContextProvider.getAppContext().getBean(TripService.class).saveTrip(clientTrip.getTrip());
+        Trip trip = clientTrip.getTrip();
+        prepareTripForCommit(trip);
+        tripService.saveTrip(trip);
+
         SendMessage confirmationMessage = SendMessage.builder()
                 .chatId(chatId.toString())
                 .text("Рейс сохранен в ваши рейсы")
@@ -309,6 +314,15 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         absSender.execute(confirmationMessage);
 
         finish(absSender, chatId);
+    }
+
+    private void prepareTripForCommit(Trip trip) {
+        List<City> intermediateStations = getIntermediateStations(trip);
+        trip.setIntermediateCities(intermediateStations);
+    }
+
+    private List<City> getIntermediateStations(Trip trip) {
+        return tripRequestService.getIntermediateStations(trip);
     }
 
     private void doCancelTrip(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {

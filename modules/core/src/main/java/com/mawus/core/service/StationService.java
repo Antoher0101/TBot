@@ -11,4 +11,5 @@ public interface StationService {
     Station saveStation(Station station, City city);
     void saveStationsForCity(City city, Set<Station> stations);
     List<Station> getStationsForCity(City city);
+    Station findStationByCode(String code);
 }

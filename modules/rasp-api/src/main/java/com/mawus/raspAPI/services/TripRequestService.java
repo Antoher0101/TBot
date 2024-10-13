@@ -5,9 +5,10 @@ import com.mawus.core.domain.TripResponse;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleBetStation.Segment;
 import com.mawus.core.entity.City;
+import com.mawus.core.entity.Station;
 import com.mawus.core.entity.Transport;
 import com.mawus.core.entity.Trip;
-import com.mawus.core.service.CityService;
+import com.mawus.core.service.StationService;
 import com.mawus.core.service.TransportService;
 import com.mawus.raspAPI.api.APIMethods;
 import com.mawus.raspAPI.config.RaspAPIConfiguration;
@@ -30,13 +31,13 @@ public class TripRequestService {
 
     private final APIMethods api;
     private final RaspAPIConfiguration configuration;
-    private final CityService cityService;
+    private final StationService stationService;
     private final TransportService transportService;
 
-    public TripRequestService(APIMethods api, RaspAPIConfiguration configuration, CityService cityService, TransportService transportService) {
+    public TripRequestService(APIMethods api, RaspAPIConfiguration configuration, StationService stationService, TransportService transportService) {
         this.api = api;
         this.configuration = configuration;
-        this.cityService = cityService;
+        this.stationService = stationService;
         this.transportService = transportService;
     }
 
@@ -63,10 +64,10 @@ public class TripRequestService {
     private Trip segmentToTrip(Segment segment) {
         Trip trip = new Trip();
 
-        City cityFrom = cityService.findCityByStationCode(segment.getFrom().getCode());
-        City cityTo = cityService.findCityByStationCode(segment.getTo().getCode());
-        trip.setCityFrom(cityFrom);
-        trip.setCityTo(cityTo);
+        Station stationFrom = stationService.findStationByCode(segment.getFrom().getCode());
+        Station stationTo = stationService.findStationByCode(segment.getTo().getCode());
+        trip.setStationFrom(stationFrom);
+        trip.setStationTo(stationTo);
 
         trip.setTripNumber(segment.getThread().getNumber());
         trip.setDepartureTime(LocalDateTime.parse(segment.getDeparture(), DateTimeFormatter.ISO_DATE_TIME));

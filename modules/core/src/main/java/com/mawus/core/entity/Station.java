@@ -15,7 +15,7 @@ public class Station extends BaseUuidEntity {
     @Column(name = "api_code", nullable = false, unique = true)
     private String apiCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     private City city;
 

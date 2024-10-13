@@ -47,4 +47,9 @@ public class StationServiceImpl implements StationService {
     public List<Station> getStationsForCity(City city) {
         return stationRepository.findAllByCity(city);
     }
+
+    @Override
+    public Station findStationByCode(String code) {
+        return stationRepository.findByApiCode(code).orElse(null);
+    }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1728828519282-7" author="Myawutb">
+        <dropForeignKeyConstraint baseTableName="bot_trip" constraintName="fk_bot_trip_on_city_from"/>
+    </changeSet>
+    <changeSet id="1728828519282-8" author="Myawutb">
+        <dropForeignKeyConstraint baseTableName="bot_trip" constraintName="fk_bot_trip_on_city_to"/>
+    </changeSet>
+    <changeSet id="1728828519282-1" author="Myawutb">
+        <addColumn tableName="bot_trip">
+            <column name="station_from_id" type="UUID"/>
+            <column name="station_to_id" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1728828519282-2" author="Myawutb">
+        <addNotNullConstraint columnName="station_from_id" tableName="bot_trip"/>
+    </changeSet>
+    <changeSet id="1728828519282-4" author="Myawutb">
+        <addNotNullConstraint columnName="station_to_id" tableName="bot_trip"/>
+    </changeSet>
+    <changeSet id="1728828519282-5" author="Myawutb">
+        <addForeignKeyConstraint baseColumnNames="station_from_id" baseTableName="bot_trip"
+                                 constraintName="FK_BOT_TRIP_ON_STATION_FROM" referencedColumnNames="id"
+                                 referencedTableName="bot_station"/>
+    </changeSet>
+    <changeSet id="1728828519282-6" author="Myawutb">
+        <addForeignKeyConstraint baseColumnNames="station_to_id" baseTableName="bot_trip"
+                                 constraintName="FK_BOT_TRIP_ON_STATION_TO" referencedColumnNames="id"
+                                 referencedTableName="bot_station"/>
+    </changeSet>
+    <changeSet id="1728828519282-9" author="Myawutb">
+        <dropColumn columnName="city_from_id" tableName="bot_trip"/>
+
+        <dropColumn columnName="city_to_id" tableName="bot_trip"/>
+    </changeSet>
+
+</databaseChangeLog>
