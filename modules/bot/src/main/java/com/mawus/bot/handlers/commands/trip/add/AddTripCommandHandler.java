@@ -45,7 +45,7 @@ public class AddTripCommandHandler implements UpdateHandler {
 
         ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
         if (clientTrip != null) {
-            return;
+            clientTripService.disposeDraftTrip(chatId);
         }
 
         createNewDraftTrip(chatId);

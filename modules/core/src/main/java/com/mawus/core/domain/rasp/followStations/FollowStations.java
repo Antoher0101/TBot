@@ -8,7 +8,7 @@ public class FollowStations {
 
     private String exceptDays; // except_days
     private String arrivalDate; // arrival_date
-    private String from;
+    private Station from;
     private String uid;
     private String title;
     private Interval interval;
@@ -17,7 +17,7 @@ public class FollowStations {
     private String number;
     private String shortTitle; // short_title
     private String days;
-    private String to;
+    private Station to;
     private Carrier carrier;
     private String transportType; // transport_type
     private List<Stop> stops;
@@ -44,11 +44,11 @@ public class FollowStations {
         this.arrivalDate = arrivalDate;
     }
 
-    public String getFrom() {
+    public Station getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(Station from) {
         this.from = from;
     }
 
@@ -119,11 +119,11 @@ public class FollowStations {
         this.days = days;
     }
 
-    public String getTo() {
+    public Station getTo() {
         return to;
     }
 
-    public void setTo(String to) {
+    public void setTo(Station to) {
         this.to = to;
     }
 

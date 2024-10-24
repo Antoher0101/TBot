@@ -32,6 +32,11 @@ public class ClientTrip implements Serializable {
         this.client = client;
     }
 
+    public ClientTrip(Client client) {
+        this.tripQuery = null;
+        this.client = client;
+    }
+
     public TripQuery getTripQuery() {
         return tripQuery;
     }

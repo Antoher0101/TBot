@@ -2,9 +2,14 @@ package com.mawus.raspAPI.services;
 
 import com.mawus.core.domain.TripQuery;
 import com.mawus.core.domain.TripResponse;
+import com.mawus.core.domain.rasp.followStations.FollowStations;
+import com.mawus.core.domain.rasp.followStations.Stop;
 import com.mawus.core.domain.rasp.scheduleBetStation.ScheduleBetStation;
 import com.mawus.core.domain.rasp.scheduleBetStation.Segment;
-import com.mawus.core.entity.City;
+import com.mawus.core.domain.rasp.scheduleStation.Event;
+import com.mawus.core.domain.rasp.scheduleStation.Schedule;
+import com.mawus.core.domain.rasp.scheduleStation.ScheduleStation;
+import com.mawus.core.domain.rasp.scheduleStation.Thread;
 import com.mawus.core.entity.Station;
 import com.mawus.core.entity.Transport;
 import com.mawus.core.entity.Trip;
@@ -21,8 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("bot_TripRequestService")
@@ -78,5 +82,88 @@ public class TripRequestService {
         trip.setTransport(transport);
 
         return trip;
+    }
+
+    public List<Station> getIntermediateStations(Trip trip) throws ParserException, ValidationException, HTTPClientException {
+        Optional<String> threadUid = getThreadUid(trip);
+
+        if (threadUid.isEmpty()) {
+            return null;
+        }
+
+        RaspQueryParams arrivalQueryParams = new RaspQueryParams.Builder()
+                .uid(threadUid.get())
+                .from(trip.getStationFrom().getApiCode())
+                .to(trip.getStationTo().getApiCode())
+                .date(trip.getDepartureTime().format(DateTimeFormatter.ISO_DATE))
+                .build();
+        FollowStations followStations = api.getFollowList(arrivalQueryParams);
+        List<Stop> stops = followStations.getStops();
+
+        int fromIndex = -1;
+        int toIndex = -1;
+
+        for (int i = 0; i < stops.size(); i++) {
+            Stop stop = stops.get(i);
+            if (stop.getStation().getCode().equals(trip.getStationFrom().getApiCode())) {
+                fromIndex = i;
+            }
+            if (stop.getStation().getCode().equals(trip.getStationTo().getApiCode())) {
+                toIndex = i;
+                break;
+            }
+        }
+
+        if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
+            return Collections.emptyList();
+        }
+        List<Stop> intermediateStops = stops.subList(fromIndex + 1, toIndex);
+
+        List<Station> intermediateStations = new ArrayList<>();
+        for (Stop stop : intermediateStops) {
+            String stationCode = stop.getStation().getCode();
+            Station station = stationService.findStationByCode(stationCode);
+            if (station != null) {
+                intermediateStations.add(station);
+            }
+        }
+
+        return intermediateStations;
+    }
+
+    private Optional<String> getThreadUid(Trip trip) throws HTTPClientException, ParserException, ValidationException {
+        RaspQueryParams departureQueryParams = new RaspQueryParams.Builder()
+                .station(trip.getStationFrom().getApiCode())
+                .event(Event.DEPARTURE.getId())
+                .date(trip.getDepartureTime().format(DateTimeFormatter.ISO_DATE))
+                .transportType(trip.getTransport().getTransportType().getCode())
+                .build();
+
+        ScheduleStation departureStation = api.getScheduleStation(departureQueryParams);
+        Optional<String> threadUid = findThreadUid(departureStation, trip.getTripNumber());
+        if (threadUid.isEmpty()) {
+            RaspQueryParams arrivalQueryParams = new RaspQueryParams.Builder()
+                    .station(trip.getStationTo().getApiCode())
+                    .event(Event.ARRIVAL.getId())
+                    .date(trip.getArrivalTime().format(DateTimeFormatter.ISO_DATE))
+                    .transportType(trip.getTransport().getTransportType().getCode())
+                    .build();
+            ScheduleStation arrivalStation = api.getScheduleStation(arrivalQueryParams);
+
+            threadUid = findThreadUid(arrivalStation, trip.getTripNumber());
+        }
+        return threadUid;
+    }
+
+    private Optional<String> findThreadUid(ScheduleStation scheduleStation, String threadNumber) {
+        if (scheduleStation.getSchedule() == null || scheduleStation.getSchedule().isEmpty()) {
+            return Optional.empty();
+        }
+
+        return scheduleStation.getSchedule().stream()
+                .map(Schedule::getThread)
+                .filter(thread -> threadNumber.equals(thread.getNumber()))
+                .map(Thread::getUid)
+                .findFirst();
     }
 }

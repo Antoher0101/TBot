@@ -27,11 +27,11 @@ public class Trip extends StandardEntity {
     @JoinColumn(name = "station_to_id", nullable = false)
     private Station stationTo;
 
-    @ManyToMany
-    @JoinTable(name = "bot_trip_intermediate_city",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "bot_trip_intermediate_station",
             joinColumns = {@JoinColumn(name = "trip_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "city_id", referencedColumnName = "id")})
-    private List<City> intermediateCities;
+            inverseJoinColumns = {@JoinColumn(name = "station_id", referencedColumnName = "id")})
+    private List<Station> intermediateStations;
 
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
@@ -95,11 +95,11 @@ public class Trip extends StandardEntity {
         this.arrivalTime = arrivalTime;
     }
 
-    public List<City> getIntermediateCities() {
-        return intermediateCities;
+    public List<Station> getIntermediateStations() {
+        return intermediateStations;
     }
 
-    public void setIntermediateCities(List<City> intermediateCities) {
-        this.intermediateCities = intermediateCities;
+    public void setIntermediateStations(List<Station> intermediateStations) {
+        this.intermediateStations = intermediateStations;
     }
 }

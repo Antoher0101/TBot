@@ -28,8 +28,6 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     private static final String ENTER_PHONE_ACTION = "registration:enter-phone";
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{10,15}$");
 
-    private final CommandHandlerRegistry commandHandlerRegistry;
-
     private final ClientCommandStateRepository clientCommandStateRepository;
 
     private final ClientService clientService;
@@ -37,7 +35,6 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     private final ClientActionRepository clientActionRepository;
 
     public EnterRegistrationPhoneCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
-        this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.clientService = clientService;
         this.clientActionRepository = clientActionRepository;

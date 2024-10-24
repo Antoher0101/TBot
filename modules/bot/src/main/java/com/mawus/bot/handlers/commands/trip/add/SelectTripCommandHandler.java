@@ -11,7 +11,7 @@ import com.mawus.core.domain.ClientAction;
 import com.mawus.core.domain.ClientTrip;
 import com.mawus.core.domain.Command;
 import com.mawus.core.domain.TripResponse;
-import com.mawus.core.entity.City;
+import com.mawus.core.entity.Station;
 import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
@@ -21,6 +21,8 @@ import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
 import com.mawus.raspAPI.exceptions.ValidationException;
 import com.mawus.raspAPI.services.TripRequestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -37,6 +39,8 @@ import java.util.*;
 
 @Component("bot_SelectTripCommandHandler")
 public class SelectTripCommandHandler extends AbstractTripAction implements UpdateHandler {
+    private static final Logger log = LoggerFactory.getLogger(SelectTripCommandHandler.class);
+
     protected static final String SELECT_TRIP_ACTION = "selectTrip:select-trip";
 
     protected static final String NEXT_PAGE_CALLBACK = "selectTrip:next-page";
@@ -136,8 +140,15 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         long offset = (currentPage - 1L) * limit;
         try {
             response = tripRequestService.fetchNextStations(clientTrip.getTripQuery(), offset, limit);
-        } catch (ParserException | ValidationException | HTTPClientException e) {
-            throw new RuntimeException(e);
+        } catch (ParserException e) {
+            log.error("Ошибка при десериализации данных рейсов: {}",e.getMessage(), e);
+            throw new RuntimeException("Parsing error occurred: " + e.getMessage(), e);
+        } catch (ValidationException e) {
+            log.error("Ошибка валидации: {}", e.getMessage(), e);
+            throw new RuntimeException("Validation error occurred: " + e.getMessage(), e);
+        } catch (HTTPClientException e) {
+            log.error("HTTP-запрос не удался: {}", e.getMessage(), e);
+            throw new RuntimeException("HTTP request failed: " + e.getMessage(), e);
         }
         Set<Trip> trips = response.getTrips();
         if (trips.isEmpty()) {
@@ -317,12 +328,23 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     }
 
     private void prepareTripForCommit(Trip trip) {
-        List<City> intermediateStations = getIntermediateStations(trip);
-        trip.setIntermediateCities(intermediateStations);
+        List<Station> intermediateStations = getIntermediateStations(trip);
+        trip.setIntermediateStations(intermediateStations);
     }
 
-    private List<City> getIntermediateStations(Trip trip) {
-        return tripRequestService.getIntermediateStations(trip);
+    private List<Station> getIntermediateStations(Trip trip) {
+        try {
+            return tripRequestService.getIntermediateStations(trip);
+        } catch (ParserException e) {
+            log.error("Ошибка при десериализации данных для рейса: {}", e.getMessage(), e);
+            throw new RuntimeException("Parsing error occurred: " + e.getMessage(), e);
+        } catch (ValidationException e) {
+            log.error("Ошибка валидации для рейса {}: {}", trip.getId(), e.getMessage(), e);
+            throw new RuntimeException("Validation error occurred: " + e.getMessage(), e);
+        } catch (HTTPClientException e) {
+            log.error("HTTP-запрос не удался для рейса {}: {}", trip.getId(), e.getMessage(), e);
+            throw new RuntimeException("HTTP request failed: " + e.getMessage(), e);
+        }
     }
 
     private void doCancelTrip(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {

@@ -24,7 +24,7 @@ public interface ClientTripService {
     int toPrevPage(Long chatId);
 
     void updateTripOffset(Long chatId, Long newOffset);
-    void updateAvailableTrips(Long chatId, List<Trip> newTrips);
+    void updateAvailableTrips(Long chatId, List<Trip> trips);
 
     void setTrip(Long chatId, Trip trip);
     Trip getTrip(Long chatId);

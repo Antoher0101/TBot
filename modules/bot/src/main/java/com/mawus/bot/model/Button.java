@@ -18,7 +18,8 @@ public enum Button {
     ENTER_TRIP_DATE("Дата отправления"),
     CANCEL("Отмена"),
     SKIP("Пропустить"),
-    CONFIRM("Подтвердить");
+    CONFIRM("Подтвердить"),
+    COMPANIONS("Найти попутчиков");
 
     private final String alias;
 
@@ -36,6 +37,9 @@ public enum Button {
         )));
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
+        )));
+        keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
+                KeyboardButton.builder().text(COMPANIONS.getAlias()).build()
         )));
 
         return keyboardBuilder.build();

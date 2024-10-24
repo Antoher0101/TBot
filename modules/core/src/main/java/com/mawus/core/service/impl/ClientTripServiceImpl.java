@@ -86,8 +86,8 @@ public class ClientTripServiceImpl implements ClientTripService {
     }
 
     @Override
-    public void updateAvailableTrips(Long chatId, List<Trip> newTrips) {
-        clientTripStateRepository.updateAvailableTrips(chatId, newTrips);
+    public void updateAvailableTrips(Long chatId, List<Trip> trips) {
+        clientTripStateRepository.updateAvailableTrips(chatId, trips);
     }
 
     @Override

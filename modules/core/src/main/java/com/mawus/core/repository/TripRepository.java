@@ -1,9 +1,12 @@
 package com.mawus.core.repository;
 
+import com.mawus.core.entity.Station;
 import com.mawus.core.entity.Trip;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +20,11 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
     List<Trip> findByClient_Id(UUID id, Pageable pageable);
 
     long countByClient_Id(UUID id);
+
+    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumbers " +
+           "and exists (select 1 from t.intermediateStations s where s in :userStations)")
+    List<Trip> findCompanionTrips(@Param("tripNumbers") String tripNumbers, @Param("userStations") List<Station> userStations);
+
+    @EntityGraph(attributePaths = {"stationFrom.city", "stationTo.city", "intermediateStations.city"})
+    List<Trip> findFullTripsByClient_Id(UUID id);
 }

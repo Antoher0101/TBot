@@ -44,7 +44,17 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public long countTripsByClient(UUID clientId) {
+    public long countTripsByClientId(UUID clientId) {
         return tripRepository.countByClient_Id(clientId);
+    }
+
+    @Override
+    public List<Trip> findWithIntermediateStationsByClientId(UUID clientId) {
+        return tripRepository.findFullTripsByClient_Id(clientId);
+    }
+
+    @Override
+    public List<Trip> findCompanions(Trip trip) {
+        return tripRepository.findCompanionTrips(trip.getTripNumber(), trip.getIntermediateStations());
     }
 }
