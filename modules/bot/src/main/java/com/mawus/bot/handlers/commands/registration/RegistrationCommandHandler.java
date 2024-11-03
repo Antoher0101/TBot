@@ -10,6 +10,7 @@ import com.mawus.core.entity.User;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
 import com.mawus.core.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -62,7 +63,7 @@ public class RegistrationCommandHandler implements UpdateHandler {
         User newUser = new User();
         newUser.setUsername(update.getMessage().getFrom().getUserName() != null ?
                 update.getMessage().getFrom().getUserName() :
-                update.getMessage().getFrom().getFirstName());
+                update.getMessage().getFrom().getId().toString());
         newUser.setClient(client);
         return userService.saveUser(newUser);
     }

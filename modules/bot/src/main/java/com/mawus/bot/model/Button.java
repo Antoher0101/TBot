@@ -38,9 +38,9 @@ public enum Button {
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 KeyboardButton.builder().text(ADD_TRIP.getAlias()).build()
         )));
-        keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                KeyboardButton.builder().text(COMPANIONS.getAlias()).build()
-        )));
+//        keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
+//                KeyboardButton.builder().text(COMPANIONS.getAlias()).build()
+//        )));
 
         return keyboardBuilder.build();
     }

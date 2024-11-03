@@ -21,9 +21,14 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
 
     long countByClient_Id(UUID id);
 
-    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumbers " +
-           "and exists (select 1 from t.intermediateStations s where s in :userStations)")
-    List<Trip> findCompanionTrips(@Param("tripNumbers") String tripNumbers, @Param("userStations") List<Station> userStations);
+    @EntityGraph(attributePaths = {"client.user", "transport.transportType", "stationFrom.city", "stationTo.city"})
+    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumber " +
+           "and exists (select 1 from t.intermediateStations s where s in :userStations) and t.client.id <> :currentUserId")
+    List<Trip> findCompanionTrips(@Param("currentUserId") UUID currentUserId, @Param("tripNumber") String tripNumber, @Param("userStations") List<Station> userStations);
+
+    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumber " +
+           "and exists (select 1 from t.intermediateStations s where s in :userStations) and t.client.id <> :currentUserId")
+    List<Trip> findPageableCompanionTrips(@Param("currentUserId") UUID currentUserId, @Param("tripNumber") String tripNumber, @Param("userStations") List<Station> userStations, Pageable pageable);
 
     @EntityGraph(attributePaths = {"stationFrom.city", "stationTo.city", "intermediateStations.city"})
     List<Trip> findFullTripsByClient_Id(UUID id);

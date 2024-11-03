@@ -28,7 +28,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
 
     private static final String ENTER_NAME_ACTION = "registration:enter-name";
 
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Zа-яА-ЯёЁ]+([-'\\s][a-zA-Zа-яА-ЯёЁ]+)*$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^.*$");
 
     private final CommandHandlerRegistry commandHandlerRegistry;
     private final ClientCommandStateRepository clientCommandStateRepository;

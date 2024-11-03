@@ -4,6 +4,11 @@ import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.TransportRepository;
 import com.mawus.core.repository.TripRepository;
 import com.mawus.core.service.TripService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,9 @@ import java.util.UUID;
 
 @Service
 public class TripServiceImpl implements TripService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final TripRepository tripRepository;
     private final TransportRepository transportRepository;
@@ -54,7 +62,21 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findCompanions(Trip trip) {
-        return tripRepository.findCompanionTrips(trip.getTripNumber(), trip.getIntermediateStations());
+    public List<Trip> findCompanions(UUID currentClientId, Trip trip) {
+        return tripRepository.findCompanionTrips(currentClientId, trip.getTripNumber(), trip.getIntermediateStations());
+    }
+
+    @Override
+    public List<Trip> findCompanionsPage(UUID currentClientId, Trip trip, Pageable pageable) {
+        return tripRepository.findPageableCompanionTrips(currentClientId, trip.getTripNumber(), trip.getIntermediateStations(), pageable);
+    }
+
+    @Override
+    @Transactional
+    public Trip loadIntermediateStations(Trip trip) {
+        Session session = entityManager.unwrap(Session.class);
+        Trip t = session.get(Trip.class, trip.getId());
+        Hibernate.initialize(t.getIntermediateStations());
+        return t;
     }
 }

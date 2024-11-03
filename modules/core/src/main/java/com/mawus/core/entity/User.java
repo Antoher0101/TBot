@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "bot$User")
 @Table(name = "bot_user")
-public class User extends BaseUuidEntity {
+public class User extends StandardEntity {
 
     @Column(nullable = false, unique = true)
     private String username;
