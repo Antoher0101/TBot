@@ -117,7 +117,7 @@ public class TripRequestService {
         if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
             return Collections.emptyList();
         }
-        List<Stop> intermediateStops = stops.subList(fromIndex + 1, toIndex);
+        List<Stop> intermediateStops = stops.subList(fromIndex, toIndex);
 
         List<Station> intermediateStations = new ArrayList<>();
         for (Stop stop : intermediateStops) {

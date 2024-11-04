@@ -58,7 +58,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     }
 
     private void handleEnterPhoneAction(AbsSender absSender, Long chatId, String text) throws TelegramApiException {
-        if ("Пропустить".equals(text)) {
+        if (Button.SKIP.getAlias().equals(text)) {
             return;
         }
 

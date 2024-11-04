@@ -61,9 +61,14 @@ public class RegistrationCommandHandler implements UpdateHandler {
             throw new ClientNotFoundException();
         }
         User newUser = new User();
-        newUser.setUsername(update.getMessage().getFrom().getUserName() != null ?
-                update.getMessage().getFrom().getUserName() :
-                update.getMessage().getFrom().getId().toString());
+        if (update.getMessage().getFrom().getUserName() != null) {
+            newUser.setUsername(update.getMessage().getFrom().getUserName());
+            newUser.setHasLink(true);
+        }
+        else {
+            newUser.setUsername(update.getMessage().getFrom().getId().toString());
+            newUser.setHasLink(false);
+        }
         newUser.setClient(client);
         return userService.saveUser(newUser);
     }

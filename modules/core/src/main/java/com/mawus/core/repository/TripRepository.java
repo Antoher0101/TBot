@@ -22,13 +22,20 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
     long countByClient_Id(UUID id);
 
     @EntityGraph(attributePaths = {"client.user", "transport.transportType", "stationFrom.city", "stationTo.city"})
-    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumber " +
-           "and exists (select 1 from t.intermediateStations s where s in :userStations) and t.client.id <> :currentUserId")
-    List<Trip> findCompanionTrips(@Param("currentUserId") UUID currentUserId, @Param("tripNumber") String tripNumber, @Param("userStations") List<Station> userStations);
+    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber = :#{#currentTrip.tripNumber} " +
+           "and exists (select 1 from t.intermediateStations s where s in :#{#currentTrip.intermediateStations}) " +
+           "and t.client.user.id <> :#{#currentTrip.client.user.id} " +
+           "AND (t.departureTime <= :#{#currentTrip.arrivalTime} " +
+           "AND t.arrivalTime >= :#{#currentTrip.departureTime})")
+    List<Trip> findCompanionTrips(@Param("currentTrip") Trip currentTrip);
 
-    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber in :tripNumber " +
-           "and exists (select 1 from t.intermediateStations s where s in :userStations) and t.client.id <> :currentUserId")
-    List<Trip> findPageableCompanionTrips(@Param("currentUserId") UUID currentUserId, @Param("tripNumber") String tripNumber, @Param("userStations") List<Station> userStations, Pageable pageable);
+    @EntityGraph(attributePaths = {"client.user", "transport.transportType", "stationFrom.city", "stationTo.city"})
+    @Query("SELECT t FROM bot$Trip t WHERE t.tripNumber = :#{#currentTrip.tripNumber} " +
+           "and exists (select 1 from t.intermediateStations s where s in :#{#currentTrip.intermediateStations}) " +
+           "and t.client.user.id <> :#{#currentTrip.client.user.id} " +
+           "AND (t.departureTime <= :#{#currentTrip.arrivalTime} " +
+           "AND t.arrivalTime >= :#{#currentTrip.departureTime})")
+    List<Trip> findPageableCompanionTrips(@Param("currentTrip") Trip currentTrip, Pageable pageable);
 
     @EntityGraph(attributePaths = {"stationFrom.city", "stationTo.city", "intermediateStations.city"})
     List<Trip> findFullTripsByClient_Id(UUID id);

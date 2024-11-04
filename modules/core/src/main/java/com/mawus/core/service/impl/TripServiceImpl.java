@@ -62,13 +62,13 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findCompanions(UUID currentClientId, Trip trip) {
-        return tripRepository.findCompanionTrips(currentClientId, trip.getTripNumber(), trip.getIntermediateStations());
+    public List<Trip> findCompanions(Trip trip) {
+        return tripRepository.findCompanionTrips(trip);
     }
 
     @Override
-    public List<Trip> findCompanionsPage(UUID currentClientId, Trip trip, Pageable pageable) {
-        return tripRepository.findPageableCompanionTrips(currentClientId, trip.getTripNumber(), trip.getIntermediateStations(), pageable);
+    public List<Trip> findCompanionsPage(Trip trip, Pageable pageable) {
+        return tripRepository.findPageableCompanionTrips(trip, pageable);
     }
 
     @Override

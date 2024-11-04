@@ -9,6 +9,9 @@ public class User extends StandardEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(name = "has_link", nullable = false)
+    private Boolean hasLink;
+
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
@@ -27,5 +30,13 @@ public class User extends StandardEntity {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Boolean getHasLink() {
+        return hasLink;
+    }
+
+    public void setHasLink(Boolean hasLink) {
+        this.hasLink = hasLink;
     }
 }

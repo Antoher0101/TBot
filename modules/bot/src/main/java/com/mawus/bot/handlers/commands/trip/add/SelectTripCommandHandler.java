@@ -279,7 +279,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
             SendMessage confirmationMessage = SendMessage.builder()
                     .chatId(chatId.toString())
                     .text("Вы выбрали рейс №" + selectedTrip.getTripNumber() + "\n"
-                            + "Отправление: " + selectedTrip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
+                            + "Отправление: " + selectedTrip.getStationFrom().getCity().getTitle() + " " + selectedTrip.getDepartureTime().format(DateTimeFormatter.ofPattern("HH:mm, dd MMM yyyy")
                             .withLocale(new Locale("ru"))) + "\n"
                             + "Место назначения: " + selectedTrip.getStationTo().getCity().getTitle())
                     .replyMarkup(buildConfirmationKeyboard())

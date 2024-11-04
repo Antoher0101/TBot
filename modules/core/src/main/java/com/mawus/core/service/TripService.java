@@ -16,7 +16,7 @@ public interface TripService {
 
     long countTripsByClientId(UUID clientId);
 
-    List<Trip> findCompanions(UUID currentClientId, Trip trip);
-    List<Trip> findCompanionsPage(UUID currentClientId, Trip trip, Pageable pageable);
+    List<Trip> findCompanions(Trip trip);
+    List<Trip> findCompanionsPage(Trip trip, Pageable pageable);
     Trip loadIntermediateStations(Trip trip);
 }

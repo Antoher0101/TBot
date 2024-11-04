@@ -140,7 +140,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
 
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Ваше текущее имя: " + client.getName())
+                .text("Ваше имя: " + client.getName())
                 .replyMarkup(buildReplyKeyboardMarkup())
                 .build();
         absSender.execute(message);

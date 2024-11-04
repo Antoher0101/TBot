@@ -83,7 +83,7 @@ public class FindCompanionsCommandHandler implements CommandHandler, UpdateHandl
     private void handleWithPagination(AbsSender absSender, Long chatId, Client client, int currentPage, Long pageSize, Integer messageId) throws TelegramApiException {
         Trip selectedTrip = tripService.loadIntermediateStations(clientTripService.getTrip(chatId));
 
-        List<Trip> companionTrips = tripService.findCompanions(client.getId(), selectedTrip);
+        List<Trip> companionTrips = tripService.findCompanions(selectedTrip);
         String tripList = formatTrips(companionTrips, currentPage, pageSize);
 
         if (messageId != null) {
