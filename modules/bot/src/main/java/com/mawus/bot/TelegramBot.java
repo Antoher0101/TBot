@@ -4,6 +4,7 @@ import com.mawus.bot.config.BotConfig;
 import com.mawus.bot.exceptions.HandlerNotFoundException;
 import com.mawus.bot.handlers.ActionHandler;
 import com.mawus.bot.handlers.UpdateHandler;
+import com.mawus.bot.model.Button;
 import com.mawus.core.domain.ClientAction;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
@@ -92,6 +94,20 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         if (handleAction(update)) {
             log.debug("The action {} was performed", update.getMessage().getText());
+            return;
+        }
+        returnToMainMenu(update);
+    }
+
+    private void returnToMainMenu(Update update) throws TelegramApiException {
+        if (update.hasMessage()) {
+            Long chatId = update.getMessage().getChatId();
+            SendMessage message = SendMessage.builder()
+                    .chatId(chatId)
+                    .text("Возврат к главному меню")
+                    .replyMarkup(Button.createGeneralMenuKeyboard())
+                    .build();
+            this.execute(message);
         }
     }
 
