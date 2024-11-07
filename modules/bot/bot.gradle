@@ -16,3 +16,11 @@ bootJar {
 bootBuildImage{
     imageName='mawus/'+rootProject.name+'-'+project.name
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.mawus.BotApplication'
+        )
+    }
+}
