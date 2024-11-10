@@ -44,6 +44,11 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public City findByTitleElastic(String title) {
+        return cityRepository.findByTitleElastic(title).orElse(null);
+    }
+
+    @Override
     public City findByCode(String code) {
         return cityRepository.findByApiCode(code).orElse(null);
     }
