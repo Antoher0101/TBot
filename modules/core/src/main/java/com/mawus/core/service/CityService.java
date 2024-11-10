@@ -14,6 +14,8 @@ public interface CityService {
 
     City findByTitle(String title);
 
+    City findByTitleElastic(String title);
+
     City findByCode(String code);
 
     void saveCityWithStations(List<City> city);

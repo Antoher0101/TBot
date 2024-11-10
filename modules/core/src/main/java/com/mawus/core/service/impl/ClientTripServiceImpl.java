@@ -44,7 +44,7 @@ public class ClientTripServiceImpl implements ClientTripService {
 
     @Override
     public void updateCityDeparture(Long chatId, String cityName) {
-        City city = cityService.findByTitle(cityName);
+        City city = cityService.findByTitleElastic(cityName);
         if (city == null) {
             throw new RuntimeException("Not found departure city name: " + cityName);
         }
@@ -53,7 +53,7 @@ public class ClientTripServiceImpl implements ClientTripService {
 
     @Override
     public void updateCityArrival(Long chatId, String cityName) {
-        City city = cityService.findByTitle(cityName);
+        City city = cityService.findByTitleElastic(cityName);
         if (city == null) {
             throw new RuntimeException("Not found arrival city name: " + cityName);
         }
