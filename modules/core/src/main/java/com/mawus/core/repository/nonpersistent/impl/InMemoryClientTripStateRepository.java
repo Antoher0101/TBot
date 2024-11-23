@@ -115,4 +115,9 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
         }
         return null;
     }
+
+    @Override
+    public Map<Long, ClientTrip> getClientsTrip() {
+        return clientsTrip;
+    }
 }

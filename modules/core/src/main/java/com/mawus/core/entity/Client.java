@@ -73,4 +73,11 @@ public class Client extends BaseUuidEntity {
     public void setTrips(List<Trip> trips) {
         this.trips = trips;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+               "name='" + name + '\'' +
+               '}';
+    }
 }

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {RaspAPIApplicationTest.class, CoreApplicationTest.class})
 @ActiveProfiles("test")
 class TripRequestServiceTest {
-    private final Logger log = LoggerFactory.getLogger(TripRequestService.class);
+    private final Logger log = LoggerFactory.getLogger(TripRequestServiceTest.class);
 
     @Autowired
     @Qualifier("bot_TripRequestService")

@@ -96,22 +96,34 @@ public class APIYandex implements APIMethods {
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/thread/?");
 
-        if (params.getUid().isEmpty()) {
+        if (params.getUid() == null || params.getUid().isEmpty()) {
             FieldHolder holder = new FieldHolder("uid", params.getUid());
             List<FieldHolder> holders = new ArrayList<>();
             holders.add(holder);
 
+            log.error("[getFollowList] Validation failed: uid is empty");
             throw new ValidationException("Не указан параметр uid", holders);
         }
 
         request.addParams(params);
 
-        jsonParser = new JSONParser();
         Duration time = Duration.ofMinutes(2);
 
-        log.debug("[getFollowList] Query: {}", request.getRequest());
+        String fullRequestUrl = request.getRequest();
+        log.debug("[getFollowList] Full Request URL: {}", fullRequestUrl);
 
-        return jsonParser.deserializeToObject(FollowStations.class, request.getRequest(), APICon, time);
+        try {
+            jsonParser = new JSONParser();
+            log.debug("[getFollowList] Starting deserialization using JSONParser");
+
+            return jsonParser.deserializeToObject(FollowStations.class, fullRequestUrl, APICon, time);
+        } catch (HTTPClientException ex) {
+            log.error("[getFollowList] HTTP request failed for URL: {}", fullRequestUrl, ex);
+            throw ex;
+        } catch (ParserException ex) {
+            log.error("[getFollowList] Failed to parse response for URL: {}", fullRequestUrl, ex);
+            throw ex;
+        }
     }
 
     @Override

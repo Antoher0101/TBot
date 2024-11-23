@@ -59,4 +59,14 @@ public class TripQuery implements Serializable {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    public String toString() {
+        return "TripQuery{" +
+                "cityFromTitle='" + cityFromTitle + '\'' +
+                ", cityToTitle='" + cityToTitle + '\'' +
+                ", transportType='" + transportType + '\'' +
+                ", queryOffset=" + queryOffset +
+                ", date=" + date +
+                '}';
+    }
 }
