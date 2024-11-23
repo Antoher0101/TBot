@@ -1,4 +1,4 @@
-package com.mawus.core.jmx;
+package com.mawus.core.jmx.api;
 
 public interface CityAPIMbean {
 

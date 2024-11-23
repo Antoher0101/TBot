@@ -5,6 +5,7 @@ import com.mawus.core.entity.Trip;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface ClientTripStateRepository {
 
@@ -35,4 +36,6 @@ public interface ClientTripStateRepository {
     void setTrip(Long chatId, Trip trip);
 
     Trip getTrip(Long chatId);
+
+    Map<Long, ClientTrip> getClientsTrip();
 }
