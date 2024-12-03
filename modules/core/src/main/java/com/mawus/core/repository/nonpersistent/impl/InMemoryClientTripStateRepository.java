@@ -46,13 +46,13 @@ public class InMemoryClientTripStateRepository implements ClientTripStateReposit
     @Override
     public void updateCityDeparture(Long chatId, String cityCode) {
         TripQuery trip = clientsTrip.get(chatId).getTripQuery();
-        trip.setCityFromTitle(cityCode);
+        trip.setStationFromCode(cityCode);
     }
 
     @Override
     public void updateCityArrival(Long chatId, String cityCode) {
         TripQuery trip = clientsTrip.get(chatId).getTripQuery();
-        trip.setCityToTitle(cityCode);
+        trip.setStationToCode(cityCode);
     }
 
     @Override

@@ -65,7 +65,7 @@ public class StartCommandHandler implements UpdateHandler {
     }
 
     private void sentStartMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
-        log.debug("The client %{} (Chat ID) started a chat with the Bot", chatId);
+        log.debug("The client {} (Chat ID) started a chat with the Bot", chatId);
         String text;
         Message message;
         ReplyKeyboardMarkup keyboardMarkup = null;

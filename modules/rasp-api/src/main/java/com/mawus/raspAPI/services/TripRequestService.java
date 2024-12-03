@@ -53,7 +53,7 @@ public class TripRequestService {
             throw new ValidationException("Trip query cannot be null.");
         }
 
-        if (trip.getCityFromTitle() == null || trip.getCityToTitle() == null || trip.getDate() == null) {
+        if (trip.getStationFromCode() == null || trip.getStationToCode() == null || trip.getDate() == null) {
             log.error("Invalid trip query parameters: {}", trip);
             throw new ValidationException("Trip query parameters cannot be null.");
         }
@@ -72,9 +72,9 @@ public class TripRequestService {
 
         RaspQueryParams queryParams = new RaspQueryParams.Builder()
                 .offset(String.valueOf(offset))
-                .from(trip.getCityFromTitle())
+                .from(trip.getStationFromCode())
                 .transportType(trip.getTransportType())
-                .to(trip.getCityToTitle())
+                .to(trip.getStationToCode())
                 .limit(String.valueOf(limit))
                 .date(trip.getDate().format(DateTimeFormatter.ISO_DATE))
                 .build();

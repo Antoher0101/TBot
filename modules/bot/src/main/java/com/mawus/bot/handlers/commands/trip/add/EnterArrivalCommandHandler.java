@@ -1,5 +1,7 @@
 package com.mawus.bot.handlers.commands.trip.add;
 
+import com.mawus.bot.exceptions.InvalidUserInputException;
+import com.mawus.bot.handlers.commands.RetryCommandHandler;
 import com.mawus.bot.handlers.commands.base.AbstractTripAction;
 import com.mawus.bot.handlers.registry.CommandHandlerRegistry;
 import com.mawus.bot.model.Button;
@@ -50,11 +52,17 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
             return;
         }
 
-        handleEnterArrivalAction(absSender, chatId, text);
+        try {
+            handleEnterArrivalAction(absSender, chatId, text);
+        } catch (InvalidUserInputException e) {
+            RetryCommandHandler retry = new RetryCommandHandler(this, e.getMessage());
+            retry.executeCommand(absSender, update, chatId);
+            return;
+        }
         executeNextCommand(absSender, update, chatId);
     }
 
-    private void handleEnterArrivalAction(AbsSender absSender, Long chatId, String text) {
+    private void handleEnterArrivalAction(AbsSender absSender, Long chatId, String text) throws InvalidUserInputException {
         ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
 
         if (clientTrip == null) {
@@ -62,6 +70,11 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
         }
 
         clientTripService.updateCityArrival(chatId, text);
+
+        clientTrip = clientTripService.findTripByChatId(chatId);
+        if (clientTrip.getTripQuery().getStationFromCode().equals(clientTrip.getTripQuery().getStationToCode())) {
+            throw new InvalidUserInputException("Город отправления и город прибытия не могут быть одинаковыми", text, "Города совпадают");
+        }
     }
 
     private void executeNextCommand(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
