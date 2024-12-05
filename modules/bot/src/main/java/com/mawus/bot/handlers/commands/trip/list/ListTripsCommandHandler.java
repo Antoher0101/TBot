@@ -24,13 +24,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component("bot_ListTripsCommandHandler")
 public class ListTripsCommandHandler implements UpdateHandler {
-    protected static final String PAGE_CALLBACK = "listTrip:page";
     public static final String SELECT_TRIP_CALLBACK = "listTrip:select";
-
+    protected static final String NEXT_PAGE_CALLBACK = "listTrip:next-page";
+    protected static final String PREV_PAGE_CALLBACK = "listTrip:prev-page";
     protected final TemplateService templateService;
     protected final TripService tripService;
     protected final ClientService clientService;
@@ -61,8 +64,18 @@ public class ListTripsCommandHandler implements UpdateHandler {
 
     private boolean isListTripCommand(Update update) {
         return update.hasMessage()
-                && update.getMessage().hasText()
-                && update.getMessage().getText().equals(Button.MY_TRIPS.getAlias());
+               && update.getMessage().hasText()
+               && update.getMessage().getText().equals(Button.MY_TRIPS.getAlias());
+    }
+
+    private boolean isCallbackQueryUpdate(Update update) {
+        if (update.hasCallbackQuery()) {
+            String callbackData = update.getCallbackQuery().getData();
+            return callbackData.startsWith(NEXT_PAGE_CALLBACK)
+                   || callbackData.startsWith(PREV_PAGE_CALLBACK)
+                   || callbackData.startsWith(SELECT_TRIP_CALLBACK);
+        }
+        return false;
     }
 
     @Override
@@ -79,21 +92,24 @@ public class ListTripsCommandHandler implements UpdateHandler {
         }
         if (isListTripCommand(update)) {
             Integer messageId = getMessageIdFromUpdate(update);
-            int currentPage = extractCurrentPage(update);
-            Long pageSize = botConfig.getTripsLimit();
             clientTripService.createDraftTrip(chatId, new ClientTrip(client));
 
-            handleTripsPagination(absSender, chatId, client, currentPage, pageSize, messageId);
+            handleTripsPagination(absSender, chatId, messageId);
         }
     }
 
     private void handleCallbackQueryUpdate(AbsSender absSender, Update update) throws TelegramApiException {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
         String data = callbackQuery.getData();
 
         if (data.startsWith(SELECT_TRIP_CALLBACK)) {
             doFindCompanions(absSender, update, chatId);
+        } else if (NEXT_PAGE_CALLBACK.equals(data)) {
+            doNextPage(absSender, chatId, messageId);
+        } else if (PREV_PAGE_CALLBACK.equals(data)) {
+            doPrevPage(absSender, chatId, messageId);
         }
     }
 
@@ -106,7 +122,7 @@ public class ListTripsCommandHandler implements UpdateHandler {
         List<Trip> availableTrips = clientTrip.getAvailableTrips();
         int selectedTripIndex = Integer.parseInt(data.replace(SELECT_TRIP_CALLBACK + "_", ""));
 
-        int localIndex = (int) (selectedTripIndex - clientTrip.getOffset());
+        int localIndex = (int) (selectedTripIndex - (clientTrip.getCurrentPage() - 1) * botConfig.getTripsLimit());
         if (localIndex >= 0 && localIndex <= availableTrips.size()) {
             Trip selectedTrip = availableTrips.get(localIndex - 1);
 
@@ -118,7 +134,16 @@ public class ListTripsCommandHandler implements UpdateHandler {
         commandHandlerRegistry.find(Command.COMPANIONS).executeCommand(absSender, update, chatId);
     }
 
-    private void handleTripsPagination(AbsSender absSender, Long chatId, Client client, int currentPage, Long pageSize, Integer messageId) throws TelegramApiException {
+    private void handleTripsPagination(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {
+        ClientTrip clientTrip = clientTripService.findTripByChatId(chatId);
+        if (clientTrip == null || clientTrip.getClient() == null) {
+            return;
+        }
+        Client client = clientTrip.getClient();
+        Long pageSize = botConfig.getTripsLimit();
+
+        int currentPage = clientTrip.getCurrentPage();
+
         long totalTrips = tripService.countTripsByClientId(client.getId());
         List<Trip> trips = tripService.findByClientId(client.getId(), currentPage, Math.toIntExact(pageSize));
         clientTripService.updateAvailableTrips(chatId, trips);
@@ -159,6 +184,16 @@ public class ListTripsCommandHandler implements UpdateHandler {
         return templateService.processTemplate(TemplateConstants.TRIP_LIST_TEMPLATE, model);
     }
 
+    private void doNextPage(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {
+        clientTripService.toNextPage(chatId);
+        handleTripsPagination(absSender, chatId, messageId);
+    }
+
+    private void doPrevPage(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {
+        clientTripService.toPrevPage(chatId);
+        handleTripsPagination(absSender, chatId, messageId);
+    }
+
     private InlineKeyboardMarkup buildPaginationKeyboard(int currentPage, Long pageSize, long totalTrips) {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
@@ -183,26 +218,18 @@ public class ListTripsCommandHandler implements UpdateHandler {
         if (currentPage > 1) {
             navigationRow.add(InlineKeyboardButton.builder()
                     .text("Назад")
-                    .callbackData(PAGE_CALLBACK + (currentPage - 1))
+                    .callbackData(PREV_PAGE_CALLBACK)
                     .build());
         }
         if ((long) currentPage * pageSize < totalTrips) {
             navigationRow.add(InlineKeyboardButton.builder()
                     .text("Далее")
-                    .callbackData(PAGE_CALLBACK + (currentPage + 1))
+                    .callbackData(NEXT_PAGE_CALLBACK)
                     .build());
         }
         rowsInline.add(navigationRow);
 
         return InlineKeyboardMarkup.builder().keyboard(rowsInline).build();
-    }
-
-    private boolean isCallbackQueryUpdate(Update update) {
-        if (update.hasCallbackQuery()) {
-            String callbackData = update.getCallbackQuery().getData();
-            return callbackData.startsWith(PAGE_CALLBACK) || callbackData.startsWith(SELECT_TRIP_CALLBACK);
-        }
-        return false;
     }
 
     private Long extractChatId(Update update) {
@@ -213,13 +240,5 @@ public class ListTripsCommandHandler implements UpdateHandler {
 
     private Integer getMessageIdFromUpdate(Update update) {
         return update.hasCallbackQuery() ? update.getCallbackQuery().getMessage().getMessageId() : null;
-    }
-
-    private int extractCurrentPage(Update update) {
-        if (isCallbackQueryUpdate(update)) {
-            String callbackData = update.getCallbackQuery().getData();
-            return Integer.parseInt(callbackData.substring(PAGE_CALLBACK.length()));
-        }
-        return 1;
     }
 }

@@ -39,6 +39,9 @@ public class Trip extends StandardEntity {
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
+    @Column(name = "api_link")
+    private String apiLink;
+
     public Station getStationFrom() {
         return stationFrom;
     }
@@ -101,5 +104,13 @@ public class Trip extends StandardEntity {
 
     public void setIntermediateStations(List<Station> intermediateStations) {
         this.intermediateStations = intermediateStations;
+    }
+
+    public String getApiLink() {
+        return apiLink;
+    }
+
+    public void setApiLink(String apiLink) {
+        this.apiLink = apiLink;
     }
 }

@@ -125,6 +125,7 @@ public class TripRequestService {
             trip.setTripNumber(segment.getThread().getNumber());
             trip.setDepartureTime(LocalDateTime.parse(segment.getDeparture(), DateTimeFormatter.ISO_DATE_TIME));
             trip.setArrivalTime(LocalDateTime.parse(segment.getArrival(), DateTimeFormatter.ISO_DATE_TIME));
+            trip.setApiLink(segment.getThread().getThreadMethodLink());
 
             Transport transport = new Transport();
             transport.setTransportType(transportService.findByCode(segment.getThread().getTransportType()));
@@ -158,7 +159,11 @@ public class TripRequestService {
 
         FollowStations followStations;
         try {
-            followStations = api.getFollowList(arrivalQueryParams);
+            if (trip.getApiLink() != null) {
+                followStations = api.getFollowList(trip.getApiLink());
+            } else {
+                followStations = api.getFollowList(arrivalQueryParams);
+            }
         } catch (HTTPClientException | ParserException | ValidationException ex) {
             log.error("[getIntermediateStations] Error while fetching follow list for params: {}", arrivalQueryParams, ex);
             throw ex;
