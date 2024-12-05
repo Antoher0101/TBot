@@ -39,6 +39,9 @@ public class InlineCalendarBuilder {
     private boolean showFullMonthName;
     private String customPrefix = "";
 
+    private LocalDate minDate;
+    private LocalDate maxDate;
+
     public InlineCalendarBuilder() {
         this.languageCode = LanguageEnum.RU;
     }
@@ -88,8 +91,16 @@ public class InlineCalendarBuilder {
 
         for (int i = 1; i <= daysOfCurrentMonth; i++) {
             final InlineKeyboardButton in = new InlineKeyboardButton();
-            in.setText("" + i);
-            in.setCallbackData(customPrefix + InlineCalendarCommandUtil.CALENDAR_COMMAND_PREFIX + InlineCalendarCommandUtil.CALENDAR_COMMAND_DATE + DateTimeUtil.convertToString(LocalDate.of(dateForCalendar.getYear(), dateForCalendar.getMonth(), i)));
+            String text = String.valueOf(i);
+            String command = customPrefix + InlineCalendarCommandUtil.CALENDAR_COMMAND_PREFIX + InlineCalendarCommandUtil.CALENDAR_COMMAND_DATE + DateTimeUtil.convertToString(LocalDate.of(dateForCalendar.getYear(), dateForCalendar.getMonth(), i));
+
+            LocalDate currentDay = LocalDate.of(dateForCalendar.getYear(), dateForCalendar.getMonth(), i);
+            if ((minDate != null && currentDay.isBefore(minDate)) || (maxDate != null && currentDay.isAfter(maxDate))) {
+                text = " ";
+                command = customPrefix + InlineCalendarCommandUtil.CALENDAR_COMMAND_PREFIX + InlineCalendarCommandUtil.CALENDAR_COMMAND_IGNORE;
+            }
+            in.setText(text);
+            in.setCallbackData(command);
             inlineKeyboardButtons.add(in);
             weekDaysCounter += 1;
 
@@ -173,6 +184,16 @@ public class InlineCalendarBuilder {
 
     public InlineCalendarBuilder customPrefix(String customPrefix) {
         this.customPrefix = customPrefix + ":";
+        return this;
+    }
+
+    public InlineCalendarBuilder setMinDate(LocalDate minDate) {
+        this.minDate = minDate;
+        return this;
+    }
+
+    public InlineCalendarBuilder setMaxDate(LocalDate maxDate) {
+        this.maxDate = maxDate;
         return this;
     }
 }

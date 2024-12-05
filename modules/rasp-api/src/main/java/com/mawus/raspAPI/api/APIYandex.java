@@ -127,6 +127,30 @@ public class APIYandex implements APIMethods {
     }
 
     @Override
+    public FollowStations getFollowList(String query) throws HTTPClientException, ParserException {
+        RequestBuilder request = new RequestBuilder("https://" + query);
+        request.setBranch("");
+
+        Duration time = Duration.ofMinutes(2);
+
+        String fullRequestUrl = request.getRequest();
+        log.debug("[getFollowList] Full Request URL: {}", fullRequestUrl);
+
+        try {
+            jsonParser = new JSONParser();
+            log.debug("[getFollowList] Starting deserialization using JSONParser");
+
+            return jsonParser.deserializeToObject(FollowStations.class, fullRequestUrl, APICon, time);
+        } catch (HTTPClientException ex) {
+            log.error("[getFollowList] HTTP request failed for URL: {}", fullRequestUrl, ex);
+            throw ex;
+        } catch (ParserException ex) {
+            log.error("[getFollowList] Failed to parse response for URL: {}", fullRequestUrl, ex);
+            throw ex;
+        }
+    }
+
+    @Override
     public NearStations getNearStations(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException {
         request.setBranch("/nearest_stations/?");

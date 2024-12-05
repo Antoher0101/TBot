@@ -61,7 +61,7 @@ public class EnterDepartureDateAction extends AbstractTripAction implements Upda
         update.getCallbackQuery().setData(query);
         if (InlineCalendarCommandUtil.isInlineCalendarClicked(update)) {
             if (InlineCalendarCommandUtil.isCalendarNavigationButtonClicked(update)) {
-                InlineKeyboardMarkup updatedCalendar = inlineCalendarBuilder.build(update);
+                InlineKeyboardMarkup updatedCalendar = buildCalendar(update);
                 absSender.execute(SendMessage.builder()
                         .chatId(chatId)
                         .replyMarkup(updatedCalendar)
@@ -110,12 +110,16 @@ public class EnterDepartureDateAction extends AbstractTripAction implements Upda
     }
 
     private void sendEnterDepartureDateMessage(AbsSender absSender, Update update, Long chatId) throws TelegramApiException {
-        InlineKeyboardMarkup calendarMarkup = inlineCalendarBuilder.customPrefix(DATE_ACTION).build(update);
+        InlineKeyboardMarkup calendarMarkup = buildCalendar(update);
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
                 .text("Выберите дату отправления:")
                 .replyMarkup(calendarMarkup)
                 .build();
         absSender.execute(message);
+    }
+
+    private InlineKeyboardMarkup buildCalendar(Update update) {
+        return inlineCalendarBuilder.customPrefix(DATE_ACTION).setMinDate(LocalDate.now()).build(update);
     }
 }

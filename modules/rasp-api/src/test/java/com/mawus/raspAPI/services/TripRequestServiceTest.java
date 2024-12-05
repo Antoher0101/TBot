@@ -29,8 +29,8 @@ class TripRequestServiceTest {
     @Test
     public void testFetchNextStationsRealApi() {
         TripQuery trip = new TripQuery();
-        trip.setCityFromTitle("c213");
-        trip.setCityToTitle("c2");
+        trip.setStationFromCode("c213");
+        trip.setStationToCode("c2");
         trip.setDate(LocalDate.parse("2024-09-29"));
 
         try {

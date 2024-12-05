@@ -38,6 +38,9 @@ public interface APIMethods {
     FollowStations getFollowList(RaspQueryParams params)
             throws HTTPClientException, ParserException, ValidationException;
 
+    FollowStations getFollowList(String query)
+            throws HTTPClientException, ParserException;
+
     /**
      * <b>Список ближайших станций</b>
      * @return {@link NearStations} список станций, находящихся в указанном радиусе от указанной точки.

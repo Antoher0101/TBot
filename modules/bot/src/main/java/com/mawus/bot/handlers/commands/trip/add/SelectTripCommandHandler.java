@@ -144,11 +144,11 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
             log.error("Ошибка при десериализации данных рейсов: {}",e.getMessage(), e);
             throw new RuntimeException("Parsing error occurred: " + e.getMessage(), e);
         } catch (ValidationException e) {
-            log.error("Ошибка валидации: {}", e.getMessage(), e);
-            throw new RuntimeException("Validation error occurred: " + e.getMessage(), e);
+            log.error("Ошибка валидации: {}", e.getErrorText(), e);
+            throw new RuntimeException("Validation error occurred: " + e.getErrorText(), e);
         } catch (HTTPClientException e) {
-            log.error("HTTP-запрос не удался: {}", e.getMessage(), e);
-            throw new RuntimeException("HTTP request failed: " + e.getMessage(), e);
+            log.error("HTTP-запрос не удался: {}", e.getErrorText(), e);
+            throw new RuntimeException("HTTP request failed: " + e.getErrorText(), e);
         }
         Set<Trip> trips = response.getTrips();
         if (trips.isEmpty()) {

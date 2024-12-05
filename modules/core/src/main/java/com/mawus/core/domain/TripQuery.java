@@ -9,8 +9,8 @@ public class TripQuery implements Serializable {
     @Serial
     private static final long serialVersionUID = -5093281332357760863L;
 
-    private String cityFromTitle;
-    private String cityToTitle;
+    private String stationFromCode;
+    private String stationToCode;
     private String transportType;
     private Integer queryOffset = 0;
 
@@ -20,20 +20,20 @@ public class TripQuery implements Serializable {
      */
     private LocalDate date;
 
-    public String getCityFromTitle() {
-        return cityFromTitle;
+    public String getStationFromCode() {
+        return stationFromCode;
     }
 
-    public void setCityFromTitle(String cityFromTitle) {
-        this.cityFromTitle = cityFromTitle;
+    public void setStationFromCode(String stationFromCode) {
+        this.stationFromCode = stationFromCode;
     }
 
-    public String getCityToTitle() {
-        return cityToTitle;
+    public String getStationToCode() {
+        return stationToCode;
     }
 
-    public void setCityToTitle(String cityToTitle) {
-        this.cityToTitle = cityToTitle;
+    public void setStationToCode(String stationToCode) {
+        this.stationToCode = stationToCode;
     }
 
     public String getTransportType() {
@@ -62,11 +62,11 @@ public class TripQuery implements Serializable {
 
     public String toString() {
         return "TripQuery{" +
-                "cityFromTitle='" + cityFromTitle + '\'' +
-                ", cityToTitle='" + cityToTitle + '\'' +
-                ", transportType='" + transportType + '\'' +
-                ", queryOffset=" + queryOffset +
-                ", date=" + date +
-                '}';
+               "cityFromTitle='" + stationFromCode + '\'' +
+               ", cityToTitle='" + stationToCode + '\'' +
+               ", transportType='" + transportType + '\'' +
+               ", queryOffset=" + queryOffset +
+               ", date=" + date +
+               '}';
     }
 }
