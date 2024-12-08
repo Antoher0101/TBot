@@ -11,6 +11,7 @@ import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientTripService;
+import com.mawus.core.service.MessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -31,8 +32,8 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
     public EnterArrivalCommandHandler(ClientActionRepository clientActionRepository,
                                       ClientTripService clientTripService,
                                       ClientCommandStateRepository clientCommandStateRepository,
-                                      CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
+                                      CommandHandlerRegistry commandHandlerRegistry, MessageService messageService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService, messageService);
         this.clientTripService = clientTripService;
     }
 
@@ -73,7 +74,7 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
 
         clientTrip = clientTripService.findTripByChatId(chatId);
         if (clientTrip.getTripQuery().getStationFromCode().equals(clientTrip.getTripQuery().getStationToCode())) {
-            throw new InvalidUserInputException("Город отправления и город прибытия не могут быть одинаковыми", text, "Города совпадают");
+            throw new InvalidUserInputException(messageService.getMessage("bot.registration.same.city.error.message"), text, "Города совпадают");
         }
     }
 
@@ -92,7 +93,7 @@ public class EnterArrivalCommandHandler extends AbstractTripAction {
     private void sendEnterArrivalMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Введите город назначения:")
+                .text(messageService.getMessage("bot.registration.enterArrivalCity"))
                 .replyMarkup(buildReplyKeyboard())
                 .build();
         absSender.execute(message);

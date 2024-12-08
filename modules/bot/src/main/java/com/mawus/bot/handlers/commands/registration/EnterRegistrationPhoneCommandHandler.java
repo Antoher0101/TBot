@@ -10,6 +10,7 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
+import com.mawus.core.service.MessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -34,10 +35,17 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
 
     private final ClientActionRepository clientActionRepository;
 
-    public EnterRegistrationPhoneCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
+    private final MessageService messageService;
+
+    public EnterRegistrationPhoneCommandHandler(CommandHandlerRegistry commandHandlerRegistry,
+                                                ClientCommandStateRepository clientCommandStateRepository,
+                                                ClientService clientService,
+                                                ClientActionRepository clientActionRepository,
+                                                MessageService messageService) {
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.clientService = clientService;
         this.clientActionRepository = clientActionRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -79,7 +87,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     private void completeRegistration(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Регистрация завершена!.")
+                .text(messageService.getMessage("bot.registration.complete.message"))
                 .replyMarkup(Button.createGeneralMenuKeyboard())
                 .build();
         absSender.execute(message);
@@ -92,7 +100,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     private void sendInvalidPhoneNumberMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Некорректный номер телефона, попробуйте еще раз.")
+                .text(messageService.getMessage("bot.registration.phoneNumber.invalid.message"))
                 .build();
         absSender.execute(message);
     }
@@ -115,7 +123,7 @@ public class EnterRegistrationPhoneCommandHandler implements CommandHandler, Act
     private void askForPhoneNumber(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Теперь введите ваш номер телефона или пропустите этот шаг.")
+                .text(messageService.getMessage("bot.registration.phoneNumber.enter.message"))
                 .replyMarkup(buildPhoneReplyKeyboardMarkup())
                 .build();
         absSender.execute(message);

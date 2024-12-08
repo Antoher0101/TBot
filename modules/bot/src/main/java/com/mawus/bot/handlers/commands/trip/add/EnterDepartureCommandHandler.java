@@ -9,6 +9,7 @@ import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientTripService;
+import com.mawus.core.service.MessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -29,8 +30,9 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
     public EnterDepartureCommandHandler(ClientCommandStateRepository clientCommandStateRepository,
                                         CommandHandlerRegistry commandHandlerRegistry,
                                         ClientActionRepository clientActionRepository,
-                                        ClientTripService clientTripService) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
+                                        ClientTripService clientTripService,
+                                        MessageService messageService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService, messageService);
         this.clientTripService = clientTripService;
     }
 
@@ -84,7 +86,7 @@ public class EnterDepartureCommandHandler extends AbstractTripAction {
     private void sendEnterCityDepartureMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Введите город отправления:")
+                .text(messageService.getMessage("bot.registration.enterDepartureCity"))
                 .replyMarkup(buildReplyKeyboard())
                 .build();
         absSender.execute(message);

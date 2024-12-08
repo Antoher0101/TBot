@@ -9,6 +9,7 @@ import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientTripService;
+import com.mawus.core.service.MessageService;
 import io.github.dostonhamrakulov.InlineCalendarBuilder;
 import io.github.dostonhamrakulov.localization.LanguageEnum;
 import io.github.dostonhamrakulov.utils.InlineCalendarCommandUtil;
@@ -34,8 +35,9 @@ public class EnterDepartureDateAction extends AbstractTripAction implements Upda
     public EnterDepartureDateAction(ClientActionRepository clientActionRepository,
                                     ClientTripService clientTripService,
                                     ClientCommandStateRepository clientCommandStateRepository,
-                                    CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
+                                    CommandHandlerRegistry commandHandlerRegistry,
+                                    MessageService messageService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService, messageService);
         this.clientTripService = clientTripService;
     }
 
@@ -65,7 +67,7 @@ public class EnterDepartureDateAction extends AbstractTripAction implements Upda
                 absSender.execute(SendMessage.builder()
                         .chatId(chatId)
                         .replyMarkup(updatedCalendar)
-                        .text("Выберите дату отправления:")
+                        .text(messageService.getMessage("bot.registration.enterDepartureDate"))
                         .build());
                 return;
             }
@@ -113,7 +115,7 @@ public class EnterDepartureDateAction extends AbstractTripAction implements Upda
         InlineKeyboardMarkup calendarMarkup = buildCalendar(update);
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Выберите дату отправления:")
+                .text(messageService.getMessage("bot.registration.enterDepartureDate"))
                 .replyMarkup(calendarMarkup)
                 .build();
         absSender.execute(message);

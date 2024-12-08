@@ -16,6 +16,7 @@ import com.mawus.core.entity.Trip;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientTripService;
+import com.mawus.core.service.MessageService;
 import com.mawus.core.service.TripService;
 import com.mawus.raspAPI.exceptions.HTTPClientException;
 import com.mawus.raspAPI.exceptions.ParserException;
@@ -59,8 +60,9 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
                                     ClientCommandStateRepository clientCommandStateRepository,
                                     CommandHandlerRegistry commandHandlerRegistry,
                                     ClientTripService clientTripService, TripService tripService,
-                                    TripRequestService tripRequestService, TemplateService templateService, BotConfig botConfig) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
+                                    TripRequestService tripRequestService, TemplateService templateService, BotConfig botConfig,
+                                    MessageService messageService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService, messageService);
         this.clientTripService = clientTripService;
         this.tripService = tripService;
         this.tripRequestService = tripRequestService;
@@ -154,7 +156,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         if (trips.isEmpty()) {
             SendMessage emptyMessage = SendMessage.builder()
                     .chatId(chatId)
-                    .text("К сожалению, подходящих рейсов не найдено.")
+                    .text(messageService.getMessage("bot.trip.notFound"))
                     .build();
             absSender.execute(emptyMessage);
             finish(absSender, chatId);
@@ -288,7 +290,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
         } else {
             SendMessage errorMessage = SendMessage.builder()
                     .chatId(chatId.toString())
-                    .text("Некорректный выбор рейса.")
+                    .text(messageService.getMessage("bot.trip.select.error"))
                     .build();
             absSender.execute(errorMessage);
         }
@@ -320,7 +322,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
 
         SendMessage confirmationMessage = SendMessage.builder()
                 .chatId(chatId.toString())
-                .text("Рейс сохранен в ваши рейсы")
+                .text(messageService.getMessage("bot.trip.add.complete.message"))
                 .build();
         absSender.execute(confirmationMessage);
 
@@ -350,7 +352,7 @@ public class SelectTripCommandHandler extends AbstractTripAction implements Upda
     private void doCancelTrip(AbsSender absSender, Long chatId, Integer messageId) throws TelegramApiException {
         SendMessage cancelMessage = SendMessage.builder()
                 .chatId(chatId.toString())
-                .text("Выбор отменён")
+                .text(messageService.getMessage("bot.trip.select.cancel.message"))
                 .build();
         absSender.execute(cancelMessage);
 

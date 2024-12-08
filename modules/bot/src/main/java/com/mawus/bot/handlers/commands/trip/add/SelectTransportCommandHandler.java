@@ -10,6 +10,7 @@ import com.mawus.core.entity.TransportType;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientTripService;
+import com.mawus.core.service.MessageService;
 import com.mawus.core.service.TransportService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -32,8 +33,9 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
                                          ClientTripService clientTripService,
                                          TransportService transportService,
                                          ClientCommandStateRepository clientCommandStateRepository,
-                                         CommandHandlerRegistry commandHandlerRegistry) {
-        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService);
+                                         CommandHandlerRegistry commandHandlerRegistry,
+                                         MessageService messageService) {
+        super(clientActionRepository, clientCommandStateRepository, commandHandlerRegistry, clientTripService, messageService);
         this.transportService = transportService;
     }
 
@@ -87,7 +89,7 @@ public class SelectTransportCommandHandler extends AbstractTripAction {
     private void sendSelectTransportMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Выберите тип транспорта")
+                .text(messageService.getMessage("bot.trip.add.selectTransport"))
                 .replyMarkup(buildReplyKeyboardMarkup())
                 .build();
         absSender.execute(message);

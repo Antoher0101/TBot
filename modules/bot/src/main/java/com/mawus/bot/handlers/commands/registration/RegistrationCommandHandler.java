@@ -9,8 +9,8 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.entity.User;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
+import com.mawus.core.service.MessageService;
 import com.mawus.core.service.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -24,12 +24,18 @@ public class RegistrationCommandHandler implements UpdateHandler {
     private final ClientCommandStateRepository clientCommandStateRepository;
     private final UserService userService;
     private final ClientService clientService;
+    private final MessageService messageService;
 
-    public RegistrationCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, UserService userService, ClientService clientService) {
+    public RegistrationCommandHandler(CommandHandlerRegistry commandHandlerRegistry,
+                                      ClientCommandStateRepository clientCommandStateRepository,
+                                      UserService userService,
+                                      ClientService clientService,
+                                      MessageService messageService) {
         this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.userService = userService;
         this.clientService = clientService;
+        this.messageService = messageService;
     }
 
     @Override
@@ -81,7 +87,7 @@ public class RegistrationCommandHandler implements UpdateHandler {
     private void sendAlreadyRegisteredMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Вы уже зарегистрированы.")
+                .text(messageService.getMessage("bot.registration.alreadyRegistered.message"))
                 .build();
         absSender.execute(message);
     }

@@ -10,6 +10,7 @@ import com.mawus.core.entity.Client;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
 import com.mawus.core.repository.nonpersistent.ClientCommandStateRepository;
 import com.mawus.core.service.ClientService;
+import com.mawus.core.service.MessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -37,11 +38,14 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
 
     private final ClientActionRepository clientActionRepository;
 
-    public EnterRegistrationNameCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository) {
+    private final MessageService messageService;
+
+    public EnterRegistrationNameCommandHandler(CommandHandlerRegistry commandHandlerRegistry, ClientCommandStateRepository clientCommandStateRepository, ClientService clientService, ClientActionRepository clientActionRepository, MessageService messageService) {
         this.commandHandlerRegistry = commandHandlerRegistry;
         this.clientCommandStateRepository = clientCommandStateRepository;
         this.clientService = clientService;
         this.clientActionRepository = clientActionRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
         Long chatId = update.getMessage().getChatId();
         String text = update.getMessage().getText();
 
-        if ("Отмена".equals(text)) {
+        if (Button.CANCEL.getAlias().equals(text)) {
             sendCancelledMessage(absSender, chatId);
             return;
         }
@@ -82,7 +86,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
     private void sendCancelledMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Ввод имени отменен")
+                .text(messageService.getMessage("bot.registration.enterName.cancel.message"))
                 .build();
         absSender.execute(message);
     }
@@ -94,7 +98,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
     private void sendInvalidNameMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Некорректное имя, попробуйте еще раз.")
+                .text(messageService.getMessage("bot.registration.enterName.invalidName.message"))
                 .build();
         absSender.execute(message);
     }
@@ -126,7 +130,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
     private void sendEnterNameMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Введите имя:")
+                .text(messageService.getMessage("bot.registration.enterName"))
                 .replyMarkup(buildReplyKeyboardMarkup())
                 .build();
         absSender.execute(message);
@@ -140,7 +144,7 @@ public class EnterRegistrationNameCommandHandler implements CommandHandler, Acti
 
         SendMessage message = SendMessage.builder()
                 .chatId(chatId)
-                .text("Ваше имя: " + client.getName())
+                .text(messageService.getMessage("bot.registration.enterName.currentName") + client.getName())
                 .replyMarkup(buildReplyKeyboardMarkup())
                 .build();
         absSender.execute(message);

@@ -22,8 +22,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class StartCommandHandler implements UpdateHandler {
 
     private static final Logger log = LoggerFactory.getLogger(StartCommandHandler.class);
-    private static final String RESTART_MESSAGE_NAME = "RESTART_MESSAGE";
-    private static final String NEW_START_MESSAGE_NAME = "START_MESSAGE";
+    private static final String RESTART_MESSAGE_NAME = "bot.restart.message";
+    private static final String NEW_START_MESSAGE_NAME = "bot.start.message";
 
     private final ClientService clientService;
     private final UserService userService;
@@ -67,25 +67,16 @@ public class StartCommandHandler implements UpdateHandler {
     private void sentStartMessage(AbsSender absSender, Long chatId) throws TelegramApiException {
         log.debug("The client {} (Chat ID) started a chat with the Bot", chatId);
         String text;
-        Message message;
+
         ReplyKeyboardMarkup keyboardMarkup = null;
         if (!isUserExists(chatId)) {
-            message = messageService.findByName(NEW_START_MESSAGE_NAME);
-            if (message == null) {
-                log.info("Message '{}' not implemented", NEW_START_MESSAGE_NAME);
-                return;
-            }
+            text = messageService.getMessage(NEW_START_MESSAGE_NAME);
             keyboardMarkup = Button.createRegisterKeyboard();
         } else {
-            message = messageService.findByName(RESTART_MESSAGE_NAME);
-            if (message == null) {
-                log.info("Message '{}' not implemented", RESTART_MESSAGE_NAME);
-                return;
-            }
+            text = messageService.getMessage(RESTART_MESSAGE_NAME);
             keyboardMarkup = Button.createGeneralMenuKeyboard();
         }
 
-        text = message.buildText();
         SendMessage response = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)

@@ -8,6 +8,7 @@ import com.mawus.bot.model.Button;
 import com.mawus.core.domain.ClientAction;
 import com.mawus.core.domain.Command;
 import com.mawus.core.repository.nonpersistent.ClientActionRepository;
+import com.mawus.core.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,12 +39,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     protected Map<Command, ActionHandler> actionHandlers;
 
     protected final ClientActionRepository clientActionRepository;
+    protected final MessageService messageService;
 
-    public TelegramBot(BotConfig config, ClientActionRepository clientActionRepository) throws TelegramApiException {
+    public TelegramBot(BotConfig config, ClientActionRepository clientActionRepository, MessageService messageService) throws TelegramApiException {
         this.botUsername = config.getBotUsername();
         this.botToken = config.getBotToken();
         this.reconnectPause = config.getReconnectPause();
         this.clientActionRepository = clientActionRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -104,7 +107,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             Long chatId = update.getMessage().getChatId();
             SendMessage message = SendMessage.builder()
                     .chatId(chatId)
-                    .text("Возврат к главному меню")
+                    .text(messageService.getMessage("bot.returnToMenu.message"))
                     .replyMarkup(Button.createGeneralMenuKeyboard())
                     .build();
             this.execute(message);
