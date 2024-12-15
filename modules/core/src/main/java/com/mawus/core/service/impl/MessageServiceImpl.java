@@ -5,6 +5,7 @@ import com.mawus.core.repository.MessageRepository;
 import com.mawus.core.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service("core_messageService")
@@ -18,6 +19,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Cacheable(value = "messages", key = "#key")
     public String getMessage(String key) {
         log.debug("Attempting to retrieve message with key: {}", key);
         Message message = messageRepository.findByKey(key).orElse(null);
