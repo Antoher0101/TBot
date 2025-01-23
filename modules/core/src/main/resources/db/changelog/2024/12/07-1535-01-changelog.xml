@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="Myawutb">
+    <changeSet id="0" author="Myawutb" dbms="postgresql">
         <preConditions>
             <dbms type="postgresql"/>
         </preConditions>
@@ -37,11 +37,6 @@
             <column name="id" valueComputed="uuid_generate_v4()"/>
             <column name="key">bot.registration.enterName.invalidName.message</column>
             <column name="text">Некорректное имя, попробуйте еще раз</column>
-        </insert>
-        <insert tableName="bot_message">
-            <column name="id" valueComputed="uuid_generate_v4()"/>
-            <column name="key">bot.registration.enterName</column>
-            <column name="text">Введите имя</column>
         </insert>
         <insert tableName="bot_message">
             <column name="id" valueComputed="uuid_generate_v4()"/>
@@ -115,6 +110,116 @@
         </insert>
         <insert tableName="bot_message">
             <column name="id" valueComputed="uuid_generate_v4()"/>
+            <column name="key">bot.trip.select.cancel.message</column>
+            <column name="text">Выбор отменён</column>
+        </insert>
+    </changeSet>
+    <changeSet id="1" author="Myawutb" dbms="h2">
+        <preConditions>
+            <dbms type="h2"/>
+        </preConditions>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.trip.canceled</column>
+            <column name="text">Рейс отменен</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.start.message</column>
+            <column name="text">Чтобы начать пользоваться ботом, нужна дополнительная информация. Нажмите кнопку 'Зарегистрироваться'</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.restart.message</column>
+            <column name="text">Добро пожаловать!</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.returnToMenu.message</column>
+            <column name="text">Возврат к главному меню</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterName.cancel.message</column>
+            <column name="text">Ввод имени отменен</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterName.invalidName.message</column>
+            <column name="text">Некорректное имя, попробуйте еще раз</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterName</column>
+            <column name="text">Введите имя</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterName.currentName</column>
+            <column name="text">Установлено имя: </column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.complete.message</column>
+            <column name="text">Регистрация завершена!</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.phoneNumber.invalid.message</column>
+            <column name="text">Некорректный номер телефона, попробуйте еще раз</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.phoneNumber.enter.message</column>
+            <column name="text">Теперь введите ваш номер телефона или пропустите этот шаг</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.alreadyRegistered.message</column>
+            <column name="text">Вы уже зарегистрированы</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.same.city.error.message</column>
+            <column name="text">Город отправления и город прибытия не могут быть одинаковыми</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterArrivalCity</column>
+            <column name="text">Введите город назначения:</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterDepartureCity</column>
+            <column name="text">Введите город отправления:</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.registration.enterDepartureDate</column>
+            <column name="text">Выберите дату отправления:</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.trip.add.selectTransport</column>
+            <column name="text">Выберите тип транспорта</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.trip.notFound</column>
+            <column name="text">К сожалению, подходящих рейсов не найдено</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.trip.select.error</column>
+            <column name="text">Некорректный выбор рейса</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
+            <column name="key">bot.trip.add.complete.message</column>
+            <column name="text">Рейс сохранен в ваши рейсы</column>
+        </insert>
+        <insert tableName="bot_message">
+            <column name="id" valueComputed="random_uuid()"/>
             <column name="key">bot.trip.select.cancel.message</column>
             <column name="text">Выбор отменён</column>
         </insert>

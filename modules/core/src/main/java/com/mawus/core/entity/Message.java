@@ -1,10 +1,12 @@
 package com.mawus.core.entity;
 
-import com.mawus.core.domain.MessagePlaceholder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name = "bot$Message")
 @Table(name = "bot_message", uniqueConstraints = {
@@ -20,6 +22,21 @@ public class Message extends BaseUuidEntity {
 
     @Column(length = 4096, nullable = false)
     private String text;
+
+    public Message() {
+    }
+
+    public Message(String key, String description, String text) {
+        this(key, text);
+        this.description = description;
+    }
+
+    public Message(String key, String text) {
+        setId(UUID.randomUUID());
+        setCreateTs(LocalDateTime.now());
+        this.key = key;
+        this.text = text;
+    }
 
     public String getKey() {
         return key;

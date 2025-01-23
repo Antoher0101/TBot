@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication(scanBasePackages = {"com.mawus.bot", "com.mawus.core", "com.mawus.raspAPI"})
 @PropertySource("classpath:application-bot.properties")
 public class BotApplication implements CommandLineRunner {
-    private static Logger log = LoggerFactory.getLogger(BotApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(BotApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(BotApplication.class, args);

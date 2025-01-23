@@ -1,7 +1,6 @@
 rootProject.name = 'tbot'
 
 include 'modules:core'
-include 'modules:api'
 include 'modules:bot'
 include 'modules:rasp-api'
 
