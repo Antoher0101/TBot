@@ -5,6 +5,7 @@ import com.mawus.core.repository.ClientRepository;
 import com.mawus.core.service.ClientService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,6 +19,26 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client findByChatId(Long chatId) {
         return clientRepository.findByChatId(chatId).orElse(null);
+    }
+
+    @Override
+    public Client findById(UUID id) {
+        return clientRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Client> findAll() {
+        return clientRepository.findAll();
+    }
+
+    @Override
+    public Long count() {
+        return clientRepository.count();
+    }
+
+    @Override
+    public Long countActive() {
+        return clientRepository.countActive();
     }
 
     @Override

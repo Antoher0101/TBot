@@ -29,4 +29,7 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Modifying
     @Query("update bot$Client b set b.phoneNumber = ?1 where b.id = ?2")
     int updatePhoneNumberById(String phoneNumber, UUID id);
+
+    @Query("select count(b) from bot$Client b where b.active = true")
+    long countActive();
 }

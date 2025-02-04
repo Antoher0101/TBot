@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package bot.model;
+
+option java_package = "com.mawus.core.grpc.model";
+option java_outer_classname = "MessageProto";
+
+message Message {
+  string id = 1;
+  string key = 2;
+  string description = 3;
+  string text = 4;
+}

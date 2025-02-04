@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package core.jmx.grpc;
+
+import "google/protobuf/empty.proto";
+import "model/jmx_method_info.proto";
+
+option java_package = "com.mawus.core.grpc.jmx";
+option java_outer_classname = "JmxServiceProto";
+
+service JmxService {
+  rpc ListMBeans (google.protobuf.Empty) returns (ListMBeansResponse);
+  rpc InvokeMethod (InvokeMethodRequest) returns (InvokeMethodResponse);
+  rpc GetMethods (GetMethodsRequest) returns (GetMethodsResponse);
+  rpc GetAttributes (GetAttributesRequest) returns (GetAttributesResponse); // Новый метод
+}
+
+message ListMBeansResponse {
+  repeated string mbeans = 1;
+}
+
+message InvokeMethodRequest {
+  string object_name = 1;
+  string operation_name = 2;
+  repeated string params = 3;
+  repeated string signature = 4;
+}
+
+message InvokeMethodResponse {
+  string result = 1;
+}
+
+message GetMethodsRequest {
+  string object_name = 1;
+}
+
+message GetMethodsResponse {
+  repeated model.JmxMethodInfo methods = 1;
+}
+
+message GetAttributesRequest {
+  string object_name = 1;
+}
+
+message GetAttributesResponse {
+  map<string, string> attributes = 1;
+}

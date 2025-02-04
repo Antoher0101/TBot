@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package bot.grpc;
+
+import "model/message.proto";
+
+option java_package = "com.mawus.core.grpc";
+option java_outer_classname = "MessageServiceProto";
+
+service MessageService {
+  rpc GetMessage(GetMessageRequest) returns (MessageResponse);
+
+  rpc GetAllMessages(GetAllMessagesRequest) returns (AllMessagesResponse);
+
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
+
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+
+  rpc CreateMessage(CreateMessageRequest) returns (UpdateMessageResponse);
+}
+
+message GetMessageRequest {
+  string key = 1;
+}
+
+message MessageResponse {
+  model.Message message = 1;
+}
+
+message UpdateMessageResponse {
+  bool success = 1;
+}
+
+message GetAllMessagesRequest {}
+
+message AllMessagesResponse {
+  repeated model.Message messages = 1;
+}
+
+message UpdateMessageRequest {
+  string id = 1;
+  string newMessage = 2;
+  string description = 3;
+}
+
+message DeleteMessageRequest {
+  string id = 1;
+}
+
+message DeleteMessageResponse {
+  bool success = 1;
+}
+
+message CreateMessageRequest {
+  string key = 1;
+  string message = 2;
+  string description = 3;
+}

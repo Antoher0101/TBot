@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package bot.grpc;
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.mawus.core.grpc";
+option java_outer_classname = "LogServiceProto";
+
+service LogService {
+
+  rpc GetLogFiles(google.protobuf.Empty) returns (LogFilesListResponse);
+
+  rpc GetLogFileContent(LogFileRequest) returns (LogFileContent);
+
+  rpc StreamLogFileContent(LogFileRequest) returns (stream LogLineResponse);
+}
+
+message LogFileRequest {
+  string filename = 1;
+}
+
+message LogLineResponse {
+  string line = 1;
+}
+
+message LogFileContent {
+  repeated string lines = 1;
+}
+
+message LogFilesListResponse {
+  repeated string filename = 1;
+}

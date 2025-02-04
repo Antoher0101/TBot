@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package core.jmx.model;
+
+option java_package = "com.mawus.core.grpc.jmx.model";
+option java_outer_classname = "JmxMethodInfoProto";
+
+message JmxMethodInfo {
+  string name = 1;
+  repeated string parameter_types = 2;
+  repeated string parameter_names = 3;
+}

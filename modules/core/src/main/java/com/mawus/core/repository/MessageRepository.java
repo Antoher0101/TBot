@@ -10,4 +10,8 @@ import java.util.UUID;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, UUID> {
     Optional<Message> findByKey(String key);
+
+    long deleteByKey(String key);
+
+    void deleteById(UUID id);
 }
